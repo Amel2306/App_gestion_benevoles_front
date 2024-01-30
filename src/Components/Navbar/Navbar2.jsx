@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 import {
   Navbar,
@@ -69,6 +72,10 @@ const navListMenuItems2 = [
       icon: MapIcon,
     },
   ];
+
+
+
+
  
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -243,7 +250,11 @@ function NavList() {
   }
  
 export function NavbarWithMegaMenu() {
+    
   const [openNav, setOpenNav] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const navigate = useNavigate();
+
  
   React.useEffect(() => {
     window.addEventListener(
@@ -251,6 +262,25 @@ export function NavbarWithMegaMenu() {
       () => window.innerWidth >= 960 && setOpenNav(false),
     );
   }, []);
+
+    // Vérification de l'authentification
+    React.useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            setIsAuthenticated(true);
+        } else {
+            setIsAuthenticated(false);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('user');
+        setIsAuthenticated(false);
+        navigate("/");
+    };
+
  
   return (
     <Navbar className="mx-auto max-w-screen-xl px-4 py-0">
@@ -266,17 +296,23 @@ export function NavbarWithMegaMenu() {
           <NavList />
         </div>
         <div className="hidden gap-2 lg:flex">
+        {isAuthenticated && (
             <Link to="/profil" className="text-indigo-900">
                 <Button
                 size="sm"
                 variant="outlined"
                 >Profil</Button> 
             </Link>
+            )}
             <Link to="/" className="text-indigo-900">
-            <Button variant="gradient" size="sm">
-                Se connecter
-            </Button>
+                <Button 
+                    onClick={isAuthenticated ? handleLogout : null}
+                    variant="gradient" 
+                    size="sm">
+                    {isAuthenticated ? "Se déconnecter" : "Se connecter"}
+                </Button>
             </Link>
+
         </div>
         <IconButton
           variant="text"
@@ -293,6 +329,7 @@ export function NavbarWithMegaMenu() {
       <Collapse open={openNav}>
         <NavList />
         <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
+        {isAuthenticated && ( 
         <Link to="/profil" className="text-indigo-900">
           <Button
             variant="outlined"
@@ -300,11 +337,14 @@ export function NavbarWithMegaMenu() {
             Profil
           </Button>
           </Link>
+          )}
           <Link to="/" className="text-indigo-900">
-
-          <Button variant="gradient" size="sm" fullWidth>
-            Se connecter
-          </Button>
+          <Button 
+                    onClick={isAuthenticated ? handleLogout : null}
+                    variant="gradient" 
+                    size="sm">
+                    {isAuthenticated ? "Se déconnecter" : "Se connecter"}
+                </Button>
           </Link>
         </div>
       </Collapse>

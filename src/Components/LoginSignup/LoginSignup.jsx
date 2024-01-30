@@ -48,7 +48,8 @@ const LoginSignup = () => {
         } else {
             axios.post('http://localhost:4000/api/authentification/signup', { nom,prenom,email, password })
                 .then(response => {
-                    console.log(response.data);
+                    const userId = response.data.newUser.id
+                    localStorage.setItem('userId',userId);
                     localStorage.setItem('token', response.data.token);
 
                      //vérification de la présence du token
@@ -60,7 +61,6 @@ const LoginSignup = () => {
                      }
                     navigate("/home");
                     window.location.reload();
-
                 })
                 .catch(error => {
                     console.error(error);
