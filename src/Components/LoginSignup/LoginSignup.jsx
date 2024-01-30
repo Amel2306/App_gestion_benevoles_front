@@ -10,7 +10,7 @@ import password_icon from '../Assets/password.png'
 
 const LoginSignup = () => {
 
-    const [action,setAction] = useState("Inscription");
+    const [action,setAction] = useState("Connexion");
 
     const [prenom, setprenom] = useState("");
     const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ const LoginSignup = () => {
                     const userId = response.data.existingUser.id
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('userId',userId);
-                    
+
                     //vérification de la présence du token
                     const token = localStorage.getItem('token');
                     if (token) {
