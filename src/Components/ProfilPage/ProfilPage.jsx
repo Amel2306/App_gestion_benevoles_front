@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../config/axiosConfig';
 
 
 const ProfilPage = () => {
@@ -10,7 +10,7 @@ const ProfilPage = () => {
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         if (userId) {
-            axios.get(`http://localhost:4000/api/users/${userId}`)
+            axiosInstance.get(`users/${userId}`)
             .then(response => {
                 setUserInfo(response.data);
                 setIsLoading(false);

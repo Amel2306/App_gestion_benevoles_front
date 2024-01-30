@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './LoginSignup.css'
-import axios from 'axios';
+import axiosInstance from '../../config/axiosConfig';
 import { useNavigate } from "react-router-dom";
 
 
@@ -25,7 +25,7 @@ const LoginSignup = () => {
     
     const handleLoginSignup = () => {
         if (action === 'Connexion') {
-            axios.post('http://localhost:4000/api/authentification/login', { email, password })
+            axiosInstance.post(`authentification/login`, { email, password })
                 .then(response => {
                     const userId = response.data.existingUser.id
                     localStorage.setItem('token', response.data.token);
@@ -46,7 +46,7 @@ const LoginSignup = () => {
                     console.error(error);
                 });
         } else {
-            axios.post('http://localhost:4000/api/authentification/signup', { nom,prenom,email, password })
+            axiosInstance.post('authentification/signup', { nom,prenom,email, password })
                 .then(response => {
                     const userId = response.data.newUser.id
                     localStorage.setItem('userId',userId);
