@@ -3,7 +3,6 @@ import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import LoginSignup from './Components/LoginSignup/LoginSignup';
 import ProfilPage from './Components/ProfilPage/ProfilPage';
 import Calendrier from './Components/Calendrier/Calendrier';
-import Information from './Components/Information/Information';
 import Hebergement from './Components/Hebergement/Hebergement.jsx';
 import HomePage from './Components/HomePage/HomePage.jsx';
 import Acceuil from './Components/Informations/Acceuil.jsx'
@@ -28,7 +27,6 @@ const Routess = () => {
                     <Route path="/home" element={<HomePage/>} />
                     <Route path="/profil" element={<ProfilPage/>} />
                     <Route path="/calendrier" element={<Calendrier/>} />
-                    <Route path="/information" element={<Information/>} />
                     <Route path="/hebergement" element={<Hebergement/>} />
                     
                     <Route path="/animation_jeu" element={<AnimationJeu />} />
