@@ -43,6 +43,49 @@ const ProfilPage = () => {
         });
     };
 
+
+    const toggleVisibility = (hebergementId, currentVisibility) => {
+        if (currentVisibility === 1) {
+            axiosInstance.put(`hebergement/invisible/${hebergementId}`)
+            .then(response => {
+                console.log("L'hébergement a été rendu invisible avec succès.");
+                // Mettre à jour l'état local userHebergements
+                setUserHebergements(prevState => {
+                    const updatedHebergements = prevState.map(hebergement => {
+                        if (hebergement.id === hebergementId) {
+                            return { ...hebergement, visible: 0 };
+                        }
+                        return hebergement;
+                    });
+                    return updatedHebergements;
+                });
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour de la visibilité de l\'hébergement :', error);
+            });
+        } else {
+            axiosInstance.put(`hebergement/visible/${hebergementId}`)
+            .then(response => {
+                console.log("L'hébergement a été rendu visible avec succès.");
+                // Mettre à jour l'état local userHebergements
+                setUserHebergements(prevState => {
+                    const updatedHebergements = prevState.map(hebergement => {
+                        if (hebergement.id === hebergementId) {
+                            return { ...hebergement, visible: 1 };
+                        }
+                        return hebergement;
+                    });
+                    return updatedHebergements;
+                });
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour de la visibilité de l\'hébergement :', error);
+            });
+        }
+    };
+    
+    
+
     return (
         <div>
             <div className="flex justify-center py-5 px-9 ">
@@ -108,36 +151,35 @@ const ProfilPage = () => {
             </div>
             </div>
         
-        <div className="w-600 rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 mr-20 ml-20 align-center justify-center">
-        <div className='pl-2'>
+            <div className="flex justify-center">
+    <div className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 mr-20 ml-20">
         <h2 className="text-2xl font-bold text-indigo-900">Proposer un hébergement</h2>
         
-        <div className='flex p-5'>
-        {userHebergements && userHebergements.map((hebergement, index) => (   
-        <div className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg mr-4">
-        <div className='pl-2'>
-        
-            <div key={index} >
-                <div className='inline-flex items-center'>
-                    <h3 className="text-xl font-semibold">{hebergement.ville}</h3>
-                    <label className="ml-3 relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" className="sr-only peer"/>
-                        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:indigo-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-800"></div>
-                    </label>
-                </div>
-                <p>{hebergement.adresse}, {hebergement.code_postale}</p>
-                <p>Nombre de places : {hebergement.nb_places}</p>
-                <p>Hebergement publié le : {hebergement.createdAt ? formatDate(hebergement.createdAt) : <span className="text-gray-500">Indisponible</span>}</p>
-            </div>
-        
-    </div>
-</div>
+        <div className='flex flex-wrap justify-center'>
+            {userHebergements && userHebergements.map((hebergement, index) => (   
+                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4">
+                    <div className='pl-2'>
+                        <div className='inline-flex items-center'>
+                            <h3 className="text-xl font-semibold">{hebergement.ville}</h3>
+                            <label className="ml-3 relative inline-flex items-center cursor-pointer">
+                            <input 
+                                    type="checkbox" 
+                                    checked={hebergement.visible === 1}
+                                    onChange={() => toggleVisibility(hebergement.id, hebergement.visible)}
+                                    className="sr-only peer"
+                                />
+                            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:indigo-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-800"></div>
+                            </label>
+                        </div>
+                        <p>{hebergement.adresse}, {hebergement.code_postale}</p>
+                        <p>Nombre de places : {hebergement.nb_places}</p>
+                        <p>Hebergement publié le : {hebergement.createdAt ? formatDate(hebergement.createdAt) : <span className="text-gray-500">Indisponible</span>}</p>
+                    </div>
+                    </div>
 ))}
 </div>
 </div>
 </div>
-
-
     </div>  
         
     );
