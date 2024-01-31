@@ -67,7 +67,6 @@ const ProfilPage = () => {
             axiosInstance.put(`hebergement/visible/${hebergementId}`)
             .then(response => {
                 console.log("L'hébergement a été rendu visible avec succès.");
-                // Mettre à jour l'état local userHebergements
                 setUserHebergements(prevState => {
                     const updatedHebergements = prevState.map(hebergement => {
                         if (hebergement.id === hebergementId) {
@@ -83,8 +82,6 @@ const ProfilPage = () => {
             });
         }
     };
-    
-    
 
     return (
         <div>
