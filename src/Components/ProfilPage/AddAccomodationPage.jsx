@@ -1,60 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
-import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
-const ModifyAccommodationPage = ({ accommodationId, onClose, updateAccommodationInfo }) => {
-    const [accommodationInfo, setAccommodationInfo] = useState(null);
+const AddAccommodationPage = ({ onClose, updateAccommodationInfo }) => {
     const [formData, setFormData] = useState({
         ville: '',
         adresse: '',
-        code_postal: '',
-        nb_places: ''
+        code_postale: null,
+        nb_places: null
     });
 
-    useEffect(() => {
-        if (accommodationId) {
-            axiosInstance.get(`/hebergement/${accommodationId}`)
-                .then(response => {
-                    setAccommodationInfo(response.data);
-                    setFormData({
-                        ville: response.data.ville || '',
-                        adresse: response.data.adresse || '',
-                        code_postal: response.data.code_postale || '',
-                        nb_places: response.data.nb_places || ''
-                    });
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des informations de l\'hébergement :', error);
-                });
-        }
-    }, [accommodationId]);
+    const userId = localStorage.getItem('userId');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        const newValue = name === 'nb_places' || name === 'code_postale' ? parseInt(value) : value;
+
         setFormData(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: newValue
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axiosInstance.put(`/hebergement/${accommodationInfo.id}`, formData)
+
+        console.log(formData)
+
+         const dataWithUserId = {
+            ...formData,
+            user_id: userId,
+            
+        };
+
+        axiosInstance.post(`/hebergement`, dataWithUserId)
             .then(response => {
-                console.log('Modifications de l\'hébergement envoyées avec succès !');
+                console.log('Hébergement ajouté avec succès !');
                 onClose();
                 updateAccommodationInfo();
             })
             .catch(error => {
-                console.error('Erreur lors de l\'envoi des modifications de l\'hébergement :', error);
+                console.error('Erreur lors de l\'ajout de l\'hébergement :', error);
             });
     };
 
     return (
         <div className="container rounded-lg bg-opacity-85 p-8 shadow-lg m-4 mr-20 ml-20">
             <div className='flex'>
-                <h2 className="text-2xl font-bold text-indigo-900 mb-5">Modifier un hébergement</h2>
-                <div className='align-right justify-righ pl-[18px]'>
+                <h2 className="text-2xl font-bold text-indigo-900 mb-5">Ajouter un hébergement</h2>
+                <div className='align-right justify-righ pl-[200px]'>
                     <button type="button" className="text-white bg-fuchsia-700 focus:outline-none hover:bg-fuchsia-500 focus:ring-4 focus:ring-white font-medium rounded-full text-sm px-2 py-2 me-2 mb-2" onClick={onClose}>
                         <XMarkIcon className="h-5 w-5 inline-block" />
                     </button>
@@ -75,19 +70,27 @@ const ModifyAccommodationPage = ({ accommodationId, onClose, updateAccommodation
                         <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="adresse" type="text" placeholder="Adresse" name="adresse" value={formData.adresse} onChange={handleChange} />
                     </div>
                     <div className="w-full md:w-1/2 px-3 mb-6">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="code_postal">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="code_postale">
                             Code Postal
                         </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="code_postale" type="text" placeholder="Code Postal" name="code_postale" value={formData.code_postal} onChange={handleChange} />
+                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="code_postale" type="number" placeholder="Code Postal" name="code_postale" value={formData.code_postale} onChange={handleChange} />
                     </div>
                     <div className="w-full md:w-1/2 px-3 mb-6">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="nb_places">
                             Nombre de Places
                         </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="nb_places" type="text" placeholder="Nombre de Places" name="nb_places" value={formData.nb_places} onChange={handleChange} />
+                        <input 
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                            id="nb_places" 
+                            type="number"
+                            placeholder="Nombre de Places" 
+                            name="nb_places" 
+                            value={formData.nb_places} 
+                            onChange={handleChange} 
+                        />                    
                     </div>
                 </div>
-                <div className="flex items-center justify-between pl-[380px]">
+                <div className="flex items-center justify-center">
                     <button className="rounded-full bg-lime-600 px-4 py-2 text-white hover:bg-indigo-700 transition-all" type="submit">
                         Envoyer
                         <PaperAirplaneIcon className="h-5 w-5 ml-2 inline-block" />
@@ -98,4 +101,4 @@ const ModifyAccommodationPage = ({ accommodationId, onClose, updateAccommodation
     );
 };
 
-export default ModifyAccommodationPage;
+export default AddAccommodationPage;

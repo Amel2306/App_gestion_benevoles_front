@@ -5,8 +5,12 @@ import 'reactjs-popup/dist/index.css';
 import ModifyProfilePage from './ModifyProfilPage.jsx'
 import './ModifyProfilPage.css'
 import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
+import AddAccommodationPage from './AddAccomodationPage.jsx';
+import { useNavigate } from "react-router-dom";
 
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
+
+
+import { TrashIcon, PencilIcon, MapPinIcon, UserGroupIcon, CalendarDaysIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 const ProfilPage = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -15,6 +19,10 @@ const ProfilPage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingAccommodation, setIsEditingAccommodation] = useState(false);
     const [accommodationIdToEdit, setAccommodationIdToEdit] = useState(null);
+    const [isAddingAccommodation, setIsAddingAccommodation] = useState(false);
+    const navigate = useNavigate();
+
+
     
 
     useEffect(() => {
@@ -34,7 +42,7 @@ const ProfilPage = () => {
                     setIsLoading(false);
                 });
 
-            axiosInstance.get(`hebergement/user/1`)
+            axiosInstance.get(`hebergement/user/${userId}`)
                 .then(response => {
                     setUserHebergements(response.data);
                 })
@@ -128,6 +136,35 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const handleOpenAddAccommodation = () => {
+        setIsAddingAccommodation(true);
+    };
+
+    const handleCloseAddAccommodation = () => {
+        setIsAddingAccommodation(false);
+        fetchUserInfo();
+    };
+
+    const handleDeleteAccount = () => {
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                axiosInstance.delete(`users/${userId}`)
+                    .then(response => {
+                        console.log("Compte supprimé avec succès.");
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('user');
+                        navigate("/");
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression du compte :', error);
+                    });
+            }
+        }
+    }
+
     return (
             <div>
         {isEditing && (
@@ -146,9 +183,15 @@ const ProfilPage = () => {
                 </div>
             )}
 
-        <div className={`content ${isEditing || isEditingAccommodation? 'blur' : ''}`}>
-            <div className="flex justify-center py-5 px-9 ">
-                <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg">
+        {isAddingAccommodation && (
+            <div className="overlay">
+                <AddAccommodationPage onClose={handleCloseAddAccommodation} updateAccommodationInfo={fetchUserInfo} />
+            </div>
+        )}
+
+        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation? 'blur' : ''}`}>
+            <div className="flex justify-center py-5 px-[35px]">
+                <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg ">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-person-fill text-white " viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
@@ -163,7 +206,7 @@ const ProfilPage = () => {
                         </button>
 
 
-                        <a href="#" className="ml-8 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500">
+                        <a className="ml-8 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={handleDeleteAccount}>
                             <TrashIcon className="h-6 w-6 mr-2 inline-block" />
                             Supprimer
                         </a>
@@ -174,7 +217,7 @@ const ProfilPage = () => {
             
             <div className="px-9">
                 {!isLoading && userInfo && (
-                    <div className='flex flex-col '>
+                    <div className='flex flex-col align-center justify-center'>
                        <ul className=" bg-opacity-85 font-medium text-indigo-900 bg-white border border-gray-400 rounded-lg">
                         <li className="flex justify-between pl-10 pr-10 py-3 border-b border-gray-400">
                             <span>Nom :</span>
@@ -186,7 +229,7 @@ const ProfilPage = () => {
                         </li>
                         <li className="flex justify-between pl-10 pr-10 py-3 border-b border-gray-400">
                             <span>Email :</span>
-                            <span>{userInfo.email || <span style={{ color: 'gray' }}>Entrez votre email</span>}</span>
+                            <span className='pl-[680px]'>{userInfo.email || <span style={{ color: 'gray' }}>Entrez votre email</span>}</span>
                         </li>
                         <li className="flex justify-between pl-10 pr-10 py-3 border-b border-gray-400">
                             <span>Tel :</span>
@@ -223,16 +266,20 @@ const ProfilPage = () => {
             </div>
             </div>
         
-            <div className="flex justify-center">
-    <div className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 mr-20 ml-20">
+    <div className="flex justify-center">
+    <div className="rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
         <div className='flex'>
         <h2 className="text-2xl font-bold text-indigo-900">Proposer un hébergement</h2>
-        <div className="pl-[1030px]"></div>
-        <button>Ajouter</button>
+        <div className='pl-[1030px]'>
+        <button className="rounded-full bg-lime-600 px-5 py-2.5 text-white hover:bg-indigo-700 " onClick={handleOpenAddAccommodation}>
+            <PlusIcon className="h-6 w-6 mr-2 inline-block" />
+            Ajouter
+        </button>
+        </div>
         </div>
         <div className='flex flex-wrap justify-center'>
             {userHebergements && userHebergements.map((hebergement, index) => (   
-                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4">
+                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg ml-4">
                     <div className='pl-2'>
                         <div className='inline-flex items-center'>
                             <h3 className="text-xl font-semibold">{hebergement.ville}</h3>
@@ -246,9 +293,10 @@ const ProfilPage = () => {
                             <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:indigo-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-800"></div>
                             </label>
                         </div>
-                        <p>{hebergement.adresse}, {hebergement.code_postale}</p>
-                        <p>Nombre de places : {hebergement.nb_places}</p>
-                        <p>Hebergement publié le : {hebergement.createdAt ? formatDate(hebergement.createdAt) : <span className="text-gray-500">Indisponible</span>}</p>
+                        <p> <MapPinIcon className="h-5 w-5 mr-1 inline-block" />
+                            {hebergement.adresse}, {hebergement.code_postale}</p>
+                        <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />{hebergement.nb_places} places</p>
+                        <p><CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> {hebergement.updatedAt ? formatDate(hebergement.updatedAt) : <span className="text-gray-500">Indisponible</span>}</p>
                         <div className='pl-[265px]'>
                             <button className="text-sm rounded-full bg-indigo-900 px-3 py-1.5 text-white hover:bg-indigo-500 mt-3 " onClick={() => handleEditAccommodation(hebergement.id)}>
                                 <PencilIcon className="h-5 w-5 mr-1 inline-block" />
