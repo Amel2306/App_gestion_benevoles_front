@@ -7,6 +7,7 @@ import './ModifyProfilPage.css'
 import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
 import AddAccommodationPage from './AddAccomodationPage.jsx';
 import DeletePage from './DeletePage.jsx';
+import DeleteAccommodationPage from './DeleteAccommodationPage.jsx';
 
 
 
@@ -21,6 +22,8 @@ const ProfilPage = () => {
     const [accommodationIdToEdit, setAccommodationIdToEdit] = useState(null);
     const [isAddingAccommodation, setIsAddingAccommodation] = useState(false);
     const [isDeleting,setIsDeleting] = useState(false);
+    const [isDeletingAccomodation,setIsDeletingAccomodation] = useState(false);
+    const [accommodationIdToRemove, setAccommodationIdToRemove] = useState(null);
 
 
     
@@ -155,6 +158,17 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const handleDeleteAccomodation = (accommodationId) => {
+        setAccommodationIdToRemove(accommodationId);
+        setIsDeletingAccomodation(true);
+    };
+    
+
+    const handleCloseDeleteAccomodation = () => {
+        setIsDeletingAccomodation(false);
+        fetchUserInfo();
+    };
+
 
     return (
             <div>
@@ -185,7 +199,18 @@ const ProfilPage = () => {
                 <DeletePage onClose={handleCloseDelete} updateUserInfo={fetchUserInfo}/>
             </div>
             )}
-        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation || isDeleting? 'blur' : ''}`}>
+
+        {isDeletingAccomodation && (
+            <div className="overlay">
+                <DeleteAccommodationPage
+                    accommodationId={accommodationIdToRemove}
+                    onClose={handleCloseDeleteAccomodation}
+                    updateUserInfo={fetchUserInfo}
+                />
+            </div>
+        )}
+
+        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation || isDeleting || isDeletingAccomodation? 'blur' : ''}`}>
             <div className="flex justify-center py-5 px-[35px]">
                 <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg ">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
@@ -278,7 +303,10 @@ const ProfilPage = () => {
                 <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg ml-4">
                     <div className='pl-2'>
                         <div className='inline-flex items-center'>
+                            
                             <h3 className="text-xl font-semibold">{hebergement.ville}</h3>
+                            
+
                             <label className="ml-3 relative inline-flex items-center cursor-pointer">
                             <input 
                                     type="checkbox" 
@@ -293,7 +321,11 @@ const ProfilPage = () => {
                             {hebergement.adresse}, {hebergement.code_postale}</p>
                         <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />{hebergement.nb_places} places</p>
                         <p><CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> {hebergement.updatedAt ? formatDate(hebergement.updatedAt) : <span className="text-gray-500">Indisponible</span>}</p>
-                        <div className='pl-[265px]'>
+                        <div className='pl-[30px]'>
+                        <a className="text-sm ml-8 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(hebergement.id)}>
+                                <TrashIcon className="h-5 w-5 mr-1 inline-block" />
+                                Supprimer
+                            </a>
                             <button className="text-sm rounded-full bg-indigo-900 px-3 py-1.5 text-white hover:bg-indigo-500 mt-3 " onClick={() => handleEditAccommodation(hebergement.id)}>
                                 <PencilIcon className="h-5 w-5 mr-1 inline-block" />
                                 Modifier
