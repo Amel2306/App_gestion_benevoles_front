@@ -6,7 +6,7 @@ import ModifyProfilePage from './ModifyProfilPage.jsx'
 import './ModifyProfilPage.css'
 import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
 import AddAccommodationPage from './AddAccomodationPage.jsx';
-import { useNavigate } from "react-router-dom";
+import DeletePage from './DeletePage.jsx';
 
 
 
@@ -20,7 +20,7 @@ const ProfilPage = () => {
     const [isEditingAccommodation, setIsEditingAccommodation] = useState(false);
     const [accommodationIdToEdit, setAccommodationIdToEdit] = useState(null);
     const [isAddingAccommodation, setIsAddingAccommodation] = useState(false);
-    const navigate = useNavigate();
+    const [isDeleting,setIsDeleting] = useState(false);
 
 
     
@@ -145,25 +145,16 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
-    const handleDeleteAccount = () => {
-        if (window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
-            const userId = localStorage.getItem('userId');
-            if (userId) {
-                axiosInstance.delete(`users/${userId}`)
-                    .then(response => {
-                        console.log("Compte supprimé avec succès.");
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('userId');
-                        localStorage.removeItem('user');
-                        navigate("/");
 
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la suppression du compte :', error);
-                    });
-            }
-        }
-    }
+    const handleDelete = () => {
+        setIsDeleting(true);
+    };
+
+    const handleCloseDelete = () => {
+        setIsDeleting(false);
+        fetchUserInfo();
+    };
+
 
     return (
             <div>
@@ -189,7 +180,12 @@ const ProfilPage = () => {
             </div>
         )}
 
-        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation? 'blur' : ''}`}>
+        {isDeleting && (
+            <div className="overlay">
+                <DeletePage onClose={handleCloseDelete} updateUserInfo={fetchUserInfo}/>
+            </div>
+            )}
+        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation || isDeleting? 'blur' : ''}`}>
             <div className="flex justify-center py-5 px-[35px]">
                 <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg ">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
@@ -206,7 +202,7 @@ const ProfilPage = () => {
                         </button>
 
 
-                        <a className="ml-8 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={handleDeleteAccount}>
+                        <a className="ml-8 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={handleDelete}>
                             <TrashIcon className="h-6 w-6 mr-2 inline-block" />
                             Supprimer
                         </a>

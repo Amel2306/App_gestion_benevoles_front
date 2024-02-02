@@ -30,6 +30,7 @@ const LoginSignup = () => {
                     const userId = response.data.existingUser.id
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('userId',userId);
+                    localStorage.setItem('isAuthenticated',true);
 
                     //vérification de la présence du token
                     const token = localStorage.getItem('token');
@@ -48,12 +49,13 @@ const LoginSignup = () => {
         } else {
             const randomNum = Math.floor(Math.random() * 1000);
             const pseudo = `${prenom}.${nom.charAt(0)}${randomNum}`;
-
+            console.log(axiosInstance.baseURL);
             axiosInstance.post('authentification/signup', { nom,prenom,email,pseudo, password })
                 .then(response => {
                     const userId = response.data.newUser.id
                     localStorage.setItem('userId',userId);
                     localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('isAuthenticated',true);
 
                      //vérification de la présence du token
                      const token = localStorage.getItem('token');
