@@ -4,6 +4,7 @@ import axiosInstance from '../../config/axiosConfig';
 import 'reactjs-popup/dist/index.css';
 import ModifyProfilePage from './ModifyProfilPage.jsx'
 import './ModifyProfilPage.css'
+import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
 
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
 
@@ -12,8 +13,9 @@ const ProfilPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [userHebergements, setUserHebergements] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
-
+    const [isEditingAccommodation, setIsEditingAccommodation] = useState(false);
+    const [accommodationIdToEdit, setAccommodationIdToEdit] = useState(null);
+    
 
     useEffect(() => {
         fetchUserInfo();
@@ -116,14 +118,35 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const handleEditAccommodation = (accommodationId) => {
+        setAccommodationIdToEdit(accommodationId);
+        setIsEditingAccommodation(true);
+    };
+
+    const handleCloseAccommodation = () => {
+        setIsEditingAccommodation(false);
+        fetchUserInfo();
+    };
+
     return (
-        <div>
+            <div>
         {isEditing && (
             <div className="overlay">
                 <ModifyProfilePage onClose={handleClose} updateUserInfo={fetchUserInfo}/>
             </div>
-    )}
-        <div className={`content ${isEditing ? 'blur' : ''}`}>
+            )}
+
+        {isEditingAccommodation && (
+                <div className="overlay">
+                    <ModifyAccommodationPage 
+                        accommodationId={accommodationIdToEdit} 
+                        onClose={handleCloseAccommodation} 
+                        updateAccommodationInfo={fetchUserInfo} 
+                    />                
+                </div>
+            )}
+
+        <div className={`content ${isEditing || isEditingAccommodation? 'blur' : ''}`}>
             <div className="flex justify-center py-5 px-9 ">
                 <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
@@ -202,8 +225,11 @@ const ProfilPage = () => {
         
             <div className="flex justify-center">
     <div className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 mr-20 ml-20">
+        <div className='flex'>
         <h2 className="text-2xl font-bold text-indigo-900">Proposer un hébergement</h2>
-        
+        <div className="pl-[1030px]"></div>
+        <button>Ajouter</button>
+        </div>
         <div className='flex flex-wrap justify-center'>
             {userHebergements && userHebergements.map((hebergement, index) => (   
                 <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4">
@@ -223,6 +249,12 @@ const ProfilPage = () => {
                         <p>{hebergement.adresse}, {hebergement.code_postale}</p>
                         <p>Nombre de places : {hebergement.nb_places}</p>
                         <p>Hebergement publié le : {hebergement.createdAt ? formatDate(hebergement.createdAt) : <span className="text-gray-500">Indisponible</span>}</p>
+                        <div className='pl-[265px]'>
+                            <button className="text-sm rounded-full bg-indigo-900 px-3 py-1.5 text-white hover:bg-indigo-500 mt-3 " onClick={() => handleEditAccommodation(hebergement.id)}>
+                                <PencilIcon className="h-5 w-5 mr-1 inline-block" />
+                                Modifier
+                            </button>
+                        </div>
                     </div>
                     </div>
 ))}
