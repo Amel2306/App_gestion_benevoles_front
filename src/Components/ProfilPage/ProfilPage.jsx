@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
-
+//import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+import ModifyProfilePage from './ModifyProfilPage.jsx'
+import './ModifyProfilPage.css'
 
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
 
@@ -8,31 +11,36 @@ const ProfilPage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [userHebergements, setUserHebergements] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
 
 
     useEffect(() => {
+        fetchUserInfo();
+    }, []);
+
+    const fetchUserInfo = () => {
         const userId = localStorage.getItem('userId');
         if (userId) {
             axiosInstance.get(`users/${userId}`)
-            .then(response => {
-                setUserInfo(response.data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
-                setIsLoading(false);
-            });
+                .then(response => {
+                    setUserInfo(response.data);
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
+                    setIsLoading(false);
+                });
+
             axiosInstance.get(`hebergement/user/1`)
-            .then(response => {
-                console.log(response)
-                setUserHebergements(response.data);
-                console.log(userHebergements);
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des informations de l\'hebergement :', error);
-            });
+                .then(response => {
+                    setUserHebergements(response.data);
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des informations de l\'hebergement :', error);
+                });
         }
-    }, []);
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -83,8 +91,39 @@ const ProfilPage = () => {
         }
     };
 
+    const toggleChercheHebergement = (cherche_hebergement_toggle) => {
+        
+        const updatedUserInfo = {...userInfo, cherche_hebergement: cherche_hebergement_toggle === 1 ? 0 : 1};
+
+        axiosInstance.put(`users/${userInfo.id}`, updatedUserInfo)
+        .then(response => {
+            console.log("État de recherche d'hébergement mis à jour avec succès.");
+            setUserInfo(response.data); 
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour de l\'état de recherche d\'hébergement :', error);
+        });
+        console.log(userInfo)
+
+    };
+    
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
+
+    const handleClose = () => {
+        setIsEditing(false);
+        fetchUserInfo();
+    };
+
     return (
         <div>
+        {isEditing && (
+            <div className="overlay">
+                <ModifyProfilePage onClose={handleClose} updateUserInfo={fetchUserInfo}/>
+            </div>
+    )}
+        <div className={`content ${isEditing ? 'blur' : ''}`}>
             <div className="flex justify-center py-5 px-9 ">
                 <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
@@ -95,16 +134,20 @@ const ProfilPage = () => {
                     <h2 className="text-2xl font-bold text-indigo-900 ">{userInfo?.pseudo || `${userInfo?.prenom}.${userInfo?.nom.charAt(0)}`}</h2>
                     <p className="mb-8 text-gray-300 ">{userInfo?.biographie || <span style={{ color: 'gray' }}>Entrez votre biographie</span>}</p>
                     <div className="flex items-center justify-center">
-                        <a href="#" className="rounded-full bg-indigo-900 px-4 py-2 text-white hover:bg-indigo-500  ">
+                    <button className="rounded-full bg-indigo-900 px-4 py-2 text-white hover:bg-indigo-500" onClick={handleEdit}>
                             <PencilIcon className="h-6 w-6 mr-2 inline-block" />
                             Modifier
-                        </a>
+                        </button>
+
+
                         <a href="#" className="ml-8 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500">
                             <TrashIcon className="h-6 w-6 mr-2 inline-block" />
                             Supprimer
                         </a>
                     </div>
                 </div>
+
+                
             
             <div className="px-9">
                 {!isLoading && userInfo && (
@@ -132,7 +175,16 @@ const ProfilPage = () => {
                         </li>
                         <li className="flex justify-between pl-10 pr-10 py-3 border-b border-gray-400">
                             <span>Cherche hébergement :</span>
-                            <span className='pl-40'>{userInfo.cherche_hebergement || <span style={{ color: 'gray' }}>Entrez vos préférences d'hébergement</span>}</span>
+
+                            <label className="ml-3 relative inline-flex items-center cursor-pointer">
+                            <input 
+                                    type="checkbox" 
+                                    onChange={() => toggleChercheHebergement(userInfo.cherche_hebergement)}
+                                    checked={userInfo.cherche_hebergement === 1}
+                                    className="sr-only peer"
+                                />
+                            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:indigo-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-800"></div>
+                            </label>
                         </li>
                         <li className="flex justify-between pl-10 pr-10 py-2 border-b border-gray-400">
                             <span>Taille :</span>
@@ -177,7 +229,8 @@ const ProfilPage = () => {
 </div>
 </div>
 </div>
-    </div>  
+    </div> 
+    </div> 
         
     );
 };

@@ -46,7 +46,10 @@ const LoginSignup = () => {
                     console.error(error);
                 });
         } else {
-            axiosInstance.post('authentification/signup', { nom,prenom,email, password })
+            const randomNum = Math.floor(Math.random() * 1000);
+            const pseudo = `${prenom}.${nom.charAt(0)}${randomNum}`;
+
+            axiosInstance.post('authentification/signup', { nom,prenom,email,pseudo, password })
                 .then(response => {
                     const userId = response.data.newUser.id
                     localStorage.setItem('userId',userId);
