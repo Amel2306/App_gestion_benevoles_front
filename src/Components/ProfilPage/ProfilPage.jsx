@@ -8,10 +8,11 @@ import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
 import AddAccommodationPage from './AddAccomodationPage.jsx';
 import DeletePage from './DeletePage.jsx';
 import DeleteAccommodationPage from './DeleteAccommodationPage.jsx';
+import DemandeAccomodationPage from './DemandeAccommodation.jsx';
 
 
 
-import { TrashIcon, PencilIcon, MapPinIcon, UserGroupIcon, CalendarDaysIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { TrashIcon, PencilIcon, MapPinIcon, UserGroupIcon, CalendarDaysIcon, PlusIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 const ProfilPage = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -24,6 +25,8 @@ const ProfilPage = () => {
     const [isDeleting,setIsDeleting] = useState(false);
     const [isDeletingAccomodation,setIsDeletingAccomodation] = useState(false);
     const [accommodationIdToRemove, setAccommodationIdToRemove] = useState(null);
+    const [isDemande,setIsDemande] = useState(false);
+    const [accommodationIdDemandes,setAccommodationIdDemandes] = useState(false);
 
 
     
@@ -45,7 +48,7 @@ const ProfilPage = () => {
                     setIsLoading(false);
                 });
 
-            axiosInstance.get(`hebergement/user/${userId}`)
+            axiosInstance.get(`hebergement/user/1`)
                 .then(response => {
                     setUserHebergements(response.data);
                 })
@@ -169,6 +172,17 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const handleDemandes = (accommodationId) => {
+        setAccommodationIdDemandes(accommodationId);
+        setIsDemande(true);
+    };
+    
+
+    const handleCloseDemande = () => {
+        setIsDemande(false);
+        fetchUserInfo();
+    };
+
 
     return (
             <div>
@@ -210,7 +224,17 @@ const ProfilPage = () => {
             </div>
         )}
 
-        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation || isDeleting || isDeletingAccomodation? 'blur' : ''}`}>
+        {isDemande && (
+                    <div className="overlay">
+                        <DemandeAccomodationPage
+                            accommodationId={accommodationIdDemandes}
+                            onClose={handleCloseDemande}
+                            updateUserInfo={fetchUserInfo}
+                        />
+                    </div>
+                )}
+
+        <div className={`content ${isEditing || isEditingAccommodation || isAddingAccommodation || isDeleting || isDeletingAccomodation || isDemande? 'blur' : ''}`}>
             <div className="flex justify-center py-5 px-[35px]">
                 <div className="rounded-lg bg-opacity-85 bg-white p-8 text-center shadow-lg ">
                     <figure className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-900 ">
@@ -321,22 +345,31 @@ const ProfilPage = () => {
                             {hebergement.adresse}, {hebergement.code_postale}</p>
                         <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />{hebergement.nb_places} places</p>
                         <p><CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> {hebergement.updatedAt ? formatDate(hebergement.updatedAt) : <span className="text-gray-500">Indisponible</span>}</p>
-                        <div className='pl-[30px]'>
-                        <a className="text-sm ml-8 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(hebergement.id)}>
-                                <TrashIcon className="h-5 w-5 mr-1 inline-block" />
-                                Supprimer
-                            </a>
-                            <button className="text-sm rounded-full bg-indigo-900 px-3 py-1.5 text-white hover:bg-indigo-500 mt-3 " onClick={() => handleEditAccommodation(hebergement.id)}>
+                        <div className=''>
+                        <button className="text-sm rounded-full bg-lime-600 px-3 py-1.5 text-white hover:bg-lime-500 mt-3 " onClick={() => handleDemandes(hebergement.id)}>
+                                <EyeIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
+                                Voir demandes
+                            </button>
+                            <button className="ml-2 text-sm rounded-full bg-indigo-900 px-3 py-1.5 text-white hover:bg-indigo-500 mt-3 " onClick={() => handleEditAccommodation(hebergement.id)}>
                                 <PencilIcon className="h-5 w-5 mr-1 inline-block" />
                                 Modifier
                             </button>
+                        <a className="text-sm ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(hebergement.id)}>
+                                <TrashIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
+                                Supprimer
+                            </a>
+                            
+                            
                         </div>
+                       
                     </div>
                     </div>
 ))}
 </div>
 </div>
 </div>
+
+
     </div> 
     </div> 
         
