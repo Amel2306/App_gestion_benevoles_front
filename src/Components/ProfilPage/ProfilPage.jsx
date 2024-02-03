@@ -27,13 +27,30 @@ const ProfilPage = () => {
     const [accommodationIdToRemove, setAccommodationIdToRemove] = useState(null);
     const [isDemande,setIsDemande] = useState(false);
     const [accommodationIdDemandes,setAccommodationIdDemandes] = useState(false);
+    const [nombreDemandesAcceptees, setNombreDemandesAcceptees] = useState(0);
+
+    const [demandesAccepteesParHebergement, setDemandesAccepteesParHebergement] = useState([]);
 
 
-    
 
     useEffect(() => {
         fetchUserInfo();
-    }, []);
+
+        if (userHebergements) {
+            const promises = userHebergements.map(hebergement => {
+                return getNombreDemandesAcceptees(hebergement.id);
+            });
+    
+            Promise.all(promises)
+                .then(nombreDemandes => {
+                    setDemandesAccepteesParHebergement(nombreDemandes);
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération du nombre de demandes acceptées pour tous les hébergements :', error);
+                });
+        }
+    }, [userHebergements]);
+    
 
     const fetchUserInfo = () => {
         const userId = localStorage.getItem('userId');
@@ -48,7 +65,7 @@ const ProfilPage = () => {
                     setIsLoading(false);
                 });
 
-            axiosInstance.get(`hebergement/user/1`)
+            axiosInstance.get(`hebergement/user/${userId}`)
                 .then(response => {
                     setUserHebergements(response.data);
                 })
@@ -183,6 +200,19 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const getNombreDemandesAcceptees = (hebergementId) => {
+        return axiosInstance.get(`/demanderlogement/hebergement/${hebergementId}`)
+            .then(response => {
+                const demandesLogement = response.data;
+                const nombreDemandesAcceptees = demandesLogement.filter(demande => demande.statut === 'accepte').length;
+                return nombreDemandesAcceptees;
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des demandes de logement :', error);
+                return 0;
+            });
+    };
+    
 
     return (
             <div>
@@ -343,7 +373,9 @@ const ProfilPage = () => {
                         </div>
                         <p> <MapPinIcon className="h-5 w-5 mr-1 inline-block" />
                             {hebergement.adresse}, {hebergement.code_postale}</p>
-                        <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />{hebergement.nb_places} places</p>
+                        <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />
+                                {demandesAccepteesParHebergement[index]} / {hebergement.nb_places}
+                        </p>
                         <p><CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> {hebergement.updatedAt ? formatDate(hebergement.updatedAt) : <span className="text-gray-500">Indisponible</span>}</p>
                         <div className=''>
                         <button className="text-sm rounded-full bg-lime-600 px-3 py-1.5 text-white hover:bg-lime-500 mt-3 " onClick={() => handleDemandes(hebergement.id)}>
