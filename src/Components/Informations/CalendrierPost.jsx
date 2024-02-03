@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
-import { MDBProgress, MDBProgressBar } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 import "./CalendrierStyle.css"
 
 const CalendrierPost = () => {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate();   
 
     const [posts, setPosts] = useState([]);
     const [horaires, setHoraires] = useState([]);
     const [tabPostHoraire, setTabPostHoraire] = useState({})
     const [tabPostNbMax, setTabPostNbMax] = useState({})
-    const [selectedSlot, setSelectedSlot] = useState([]);
+    const [selectedSlot, setSelectedSlot] = useState([]);   
     const [chooseJeuZone, setChooseJeuZone] = useState(false)
   
     useEffect( () => { 
@@ -128,7 +127,7 @@ const CalendrierPost = () => {
                     archive
                 }
                 await axiosInstance.post(`demanderactivtie`, data)
-            }
+            }   
             else {
                 aJeu = true
             }
@@ -213,9 +212,9 @@ const CalendrierPost = () => {
                         >
                         <span class="relative text-white font-bold px-8 py-8"> {chooseJeuZone ? "Suivant" : "Valider"} </span>
                     </button> 
-                </div>
+                </div> 
 
-            </div>
+            </div> 
         </div>      
     );
 };

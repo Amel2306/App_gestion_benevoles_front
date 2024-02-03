@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
-import {useLocation} from 'react-router-dom';
+import ValidationDemande from './ValidationDemande';
+import {useLocation, useNavigate} from 'react-router-dom';
 import "./CalendrierStyle.css"
+import '../ProfilPage/ModifyProfilPage.css'
  
-const CalendrierEspaceAnimation = (props) => {
+const CalendrierEspaceAnimation = () => {
 
     const location = useLocation();
 
@@ -11,13 +13,17 @@ const CalendrierEspaceAnimation = (props) => {
 
     const allHoraires = location.state && location.state.horaires
 
+    const navigate = useNavigate();
+
     const [zones, setZones] = useState([]); 
     const [horaires, setHoraires] = useState(new Set());
-    const [horairesArray, setHorairesArray] = useState([]);
+    const [horairesArray, setHorairesArray] = useState([]);   
     const [tabPostHoraire, setTabPostHoraire] = useState({}) 
     const [tabPostNbMax, setTabPostNbMax] = useState({})
     const [selectedSlot, setSelectedSlot] = useState([]); 
     const [tabHoraire, setTabHoraire]= useState([]);
+    const [hasSendDemande,setHasSendDemande] = useState(false);
+
 
     useEffect( () => { 
 
@@ -149,81 +155,90 @@ const CalendrierEspaceAnimation = (props) => {
                 }
                 console.log(data)
                 await axiosInstance.post(`demanderactivtie`, data)
+                setHasSendDemande(true)
             }
         }
     }
 
-    function obtenirJourSemaine(date) {
+    const  obtenirJourSemaine = (date) => {
         const joursSemaine = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche" ];
-        const jour = joursSemaine[date.getDay()];
+        const jour = joursSemaine[date.getDay()];   
         return jour;
     }
  
     return (
-        <div class='p-6 bg-white m-9 rounded-3xl flex items-center justify-center min-h-xl' >
-            <div class="relative overflow-x-auto  sm:rounded-lg max-w-7xl min-h-full">
-
-                <table class="mt-12 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase dark:text-gray-400"> 
-                        <tr>
-                            <th scope="col" class="px-6 py-3 bg-indigo-100 dark:bg-gray-800">
-                            </th> 
-                            {horairesArray && horairesArray.map((horaire, index) => (
-                                <th key={index} scope="col" class="px-7 py-3 bg-indigo-100 font-bold text-xl border-l border-indigo-200 dark:border-gray-700">
-                                    {obtenirJourSemaine(new Date(horaire.date))} {horaire.horaire_debut.split(':')[0]}-{horaire.horaire_fin.split(':')[0]}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        {zones && zones.map((zone, index) => (
-                            <tr class="border-t border-indigo-200 dark:border-gray-700">
-                                <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-100 dark:text-white dark:bg-gray-800">
-                                    {zone.nom_zb}
-                                </th> 
-                                {zone.id && tabPostHoraire[zone.id] && tabPostHoraire[zone.id].map((horraire, index) => (
-                                    <td className='px-4 bg-black-500 tooltip border-l border-indigo-200' key={index}>  
-                                        <div className={`w-full bg-gray-300 rounded-full h-5 dark:bg-gray-700 text-center relative` }> 
-                                        
-                                        {zone.id && tabPostNbMax[zone.id] && tabHoraire && (  
-                                            
-                                            <div className={`w-full bg-gray-400 rounded-full h-5 dark:bg-gray-700 text-center relative ` }>    
-                                                <div 
-                                                    className="bg-blue-600 h-5 rounded-full top-[-10px]"
-                                                    style={{
-                                                        width: `${(horraire.length / (tabPostNbMax[zone.id][tabHoraire[index]]|| 0)) * 100}%`,
-                                                        backgroundColor: getColorForPercentage(horraire.length / (tabPostNbMax[zone.id][tabHoraire[index]] || 0)), 
-                                                    }} 
-                                                />   
-                                                { (   
-                                                    <input 
-                                                        className='p-3 m-1 checked:bg-[#7BC42F]'   
-                                                        type="checkbox"    
-                                                        onChange={() => handleSlotClick(zone.id, tabHoraire[index])} 
-                                                        
-                                                    />   
-                                                )}
-                                                <div className='tooltiptext'>
-                                                    {horraire.length} / {tabPostNbMax[zone.id][tabHoraire[index]]}    
-                                                </div>
-                                            </div>   
-                                        )}
-                                        </div> 
-                                    </td>
-                                )) }
-                            </tr>
-                        ))}
-                    </tbody> 
-                </table>
-                <div className='align-center justify-center'>
-                    <button onClick={() => handleSendDemande()}
-                        class="my-6 ml-[1000px] relative overflow-hidden rounded-lg h-12 w-[200px] group hover:animate-pulse hover:shadow-lg hover:scale-105 transition duration-500 before:absolute before:inset-0 before:rounded-lg before:bg-lime-500"
-                        >
-                        <span class="relative text-white font-bold px-8 py-8"> Valider </span>
-                    </button> 
+        <div>
+            { hasSendDemande && (   
+                <div className="overlay ">
+                    <ValidationDemande />
                 </div>
+            )}
+            <div  class={ `${hasSendDemande && 'blur'} p-6 bg-white m-9 rounded-3xl flex items-center justify-center min-h-xl`} >
+                <div class="relative overflow-x-auto  sm:rounded-lg max-w-7xl min-h-full">
 
+                    <table class="mt-12 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase dark:text-gray-400"> 
+                            <tr>
+                                <th scope="col" class="px-6 py-3 bg-indigo-100 dark:bg-gray-800">
+                                </th> 
+                                {horairesArray && horairesArray.map((horaire, index) => (
+                                    <th key={index} scope="col" class="px-7 py-3 bg-indigo-100 font-bold text-xl border-l border-indigo-200 dark:border-gray-700">
+                                        {obtenirJourSemaine(new Date(horaire.date))} {horaire.horaire_debut.split(':')[0]}-{horaire.horaire_fin.split(':')[0]}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            {zones && zones.map((zone, index) => (
+                                <tr class="border-t border-indigo-200 dark:border-gray-700">
+                                    <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-100 dark:text-white dark:bg-gray-800">
+                                        {zone.nom_zb}
+                                    </th> 
+                                    {zone.id && tabPostHoraire[zone.id] && tabPostHoraire[zone.id].map((horraire, index) => (
+                                        <td className='px-4 bg-black-500 tooltip border-l border-indigo-200' key={index}>  
+                                            <div className={`w-full bg-gray-300 rounded-full h-5 dark:bg-gray-700 text-center relative` }> 
+                                            
+                                            {zone.id && tabPostNbMax[zone.id] && tabHoraire && (  
+                                                
+                                                <div className={`w-full bg-gray-400 rounded-full h-5 dark:bg-gray-700 text-center relative ` }>    
+                                                    <div 
+                                                        className="bg-blue-600 h-5 rounded-full top-[-10px]"
+                                                        style={{
+                                                            width: `${(horraire.length / (tabPostNbMax[zone.id][tabHoraire[index]]|| 0)) * 100}%`,
+                                                            backgroundColor: getColorForPercentage(horraire.length / (tabPostNbMax[zone.id][tabHoraire[index]] || 0)), 
+                                                        }} 
+                                                    />   
+                                                    { (   
+                                                        <input 
+                                                            className='p-3 m-1 checked:bg-[#7BC42F]'   
+                                                            type="checkbox"    
+                                                            onChange={() => handleSlotClick(zone.id, tabHoraire[index])} 
+                                                            
+                                                        />   
+                                                    )}
+                                                    <div className='tooltiptext'>
+                                                        {horraire.length} / {tabPostNbMax[zone.id][tabHoraire[index]]}    
+                                                    </div>
+                                                </div>   
+                                            )}
+                                            </div> 
+                                        </td>
+                                    )) }
+                                </tr>
+                            ))}
+                        </tbody> 
+                    </table>
+                    <div className='align-center justify-center'>
+                        <button onClick={() => handleSendDemande()}
+                            class="my-6 ml-[1000px] relative overflow-hidden rounded-lg h-12 w-[200px] group hover:animate-pulse hover:shadow-lg hover:scale-105 transition duration-500 before:absolute before:inset-0 before:rounded-lg before:bg-lime-500"
+                            >
+                            <span class="relative text-white font-bold px-8 py-8"> Valider </span>
+                        </button> 
+                    </div>
+
+                </div>
             </div>
+
         </div>
     );
 };
