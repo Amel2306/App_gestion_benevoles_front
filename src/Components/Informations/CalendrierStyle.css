@@ -1,0 +1,31 @@
+.tooltip {
+    position: relative;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 50px;
+    background-color: #4A4BA8;
+    color: #fff; 
+    text-align: center;
+    border-radius: 8px;
+    padding: 5px;
+    z-index: 1;
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip.selected::before {
+    color: #7BC42F; /* Couleur de sélection */
+    font-size: 24px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
