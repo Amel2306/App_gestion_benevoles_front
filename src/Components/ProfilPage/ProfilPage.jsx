@@ -81,7 +81,7 @@ const ProfilPage = () => {
             month: 'long',
             day: 'numeric'
         });
-    };
+    }; 
 
 
     const toggleVisibility = (hebergementId, currentVisibility) => {
