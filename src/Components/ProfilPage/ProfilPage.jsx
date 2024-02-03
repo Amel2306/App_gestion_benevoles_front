@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 //import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
 import ModifyProfilePage from './ModifyProfilPage.jsx'
 import './ModifyProfilPage.css'
 import ModifyAccommodationPage from './ModifyAccomodationPage.jsx';
