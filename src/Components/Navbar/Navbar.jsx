@@ -72,10 +72,6 @@ const navListMenuItems2 = [
     },
   ];
 
-
-
-
- 
     function NavListMenu() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -259,6 +255,8 @@ export function NavbarWithMegaMenu() {
     
   const [openNav, setOpenNav] = React.useState(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+
   const navigate = useNavigate();
 
  
@@ -271,18 +269,26 @@ export function NavbarWithMegaMenu() {
 
     // Vérification de l'authentification
     React.useEffect(() => {
-        const userId = localStorage.getItem('userId');
-        if (userId) {
-            setIsAuthenticated(true);
-        } else {
-            setIsAuthenticated(false);
-        }
+      const authenticated = localStorage.getItem('isAuthenticated') === 'true';
+      setIsAuthenticated(authenticated);
+
+
+
+
+        //const userId = localStorage.getItem('userId');
+        //if (isAuthenticated) {
+            //localStorage.setItem('isAuthenticated', true);
+            
+        //} else {
+          //localStorage.setItem('isAuthenticated', false);
+        //}
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('user');
+        localStorage.setItem('isAuthenticated',false);
         setIsAuthenticated(false);
         navigate("/");
     };
