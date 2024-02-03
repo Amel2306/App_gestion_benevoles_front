@@ -124,20 +124,21 @@ const ProfilPage = () => {
     };
 
     const toggleChercheHebergement = (cherche_hebergement_toggle) => {
-        
         const updatedUserInfo = {...userInfo, cherche_hebergement: cherche_hebergement_toggle === 1 ? 0 : 1};
-
+    
         axiosInstance.put(`users/${userInfo.id}`, updatedUserInfo)
         .then(response => {
             console.log("État de recherche d'hébergement mis à jour avec succès.");
             setUserInfo(response.data); 
+    
+            localStorage.setItem('cherche_hebergement', updatedUserInfo.cherche_hebergement);
+            window.location.reload();
         })
         .catch(error => {
             console.error('Erreur lors de la mise à jour de l\'état de recherche d\'hébergement :', error);
         });
-        console.log(userInfo)
-
     };
+    
     
     const handleEdit = () => {
         setIsEditing(true);
@@ -340,8 +341,8 @@ const ProfilPage = () => {
             </div>
             </div>
         
-    <div className="flex justify-center">
-    <div className="rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
+    <div className="pl-[100px] pr-[100px] flex justify-center">
+    <div className=" rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
         <div className='flex'>
         <h2 className="text-2xl font-bold text-indigo-900">Proposer un hébergement</h2>
         <div className='pl-[1030px]'>
@@ -353,7 +354,7 @@ const ProfilPage = () => {
         </div>
         <div className='flex flex-wrap justify-center'>
             {userHebergements && userHebergements.map((hebergement, index) => (   
-                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg ml-4">
+                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 ">
                     <div className='pl-2'>
                         <div className='inline-flex items-center'>
                             
