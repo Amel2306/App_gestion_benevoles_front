@@ -4,7 +4,6 @@ import axiosInstance from "../../config/axiosConfig";
 import { useNavigate } from "react-router-dom";
 
 function ProfesseurFichier() {
-  const history = useNavigate();
 
   const [selectFile, setFile] = useState(null);
   const [nbErreur, setNb] = useState(0);
@@ -12,14 +11,6 @@ function ProfesseurFichier() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFile(file);
-  };
-
-  const analyseMoment = (mom) => {
-    return mom === "Oui" ? 1 : 0;
-  };
-
-  const analyseNbEleveTuteur = (nbEleveTuteur) => {
-    return nbEleveTuteur || nbEleveTuteur === "" ? 0 : parseInt(nbEleveTuteur);
   };
 
   const handleFileUpload = () => {
@@ -64,7 +55,6 @@ function ProfesseurFichier() {
 
           try {
             await Promise.all(formattedData.map(async (rowData) => {
-                Promise(resolve => setTimeout(resolve, 100))
 
                 if (rowData.zone_plan) {
                   const nom_zp = rowData.zone_plan;
@@ -132,7 +122,7 @@ function ProfesseurFichier() {
   return (
     <div className="flex flex-col align-center justify-center text-center ">
         <div className="">
-            <h1 className="bg-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
+            <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
                 Ajouter des jeux à l'aide d'un fichier CSV
             </h1>
         </div>

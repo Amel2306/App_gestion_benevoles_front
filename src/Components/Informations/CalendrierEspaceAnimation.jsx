@@ -175,16 +175,16 @@ const CalendrierEspaceAnimation = () => {
                     <ValidationDemande />
                 </div>
             )}
-            <div  class={ `${hasSendDemande && 'blur'} p-6 bg-white m-9 rounded-3xl flex items-center justify-center min-h-xl`} >
+            <div  class={ `${hasSendDemande && 'blur'} p-6 bg-white bg-opacity-85 m-9 rounded-3xl flex items-center justify-center min-h-xl`} >
                 <div class="relative overflow-x-auto  sm:rounded-lg max-w-7xl min-h-full">
 
-                    <table class="mt-12 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table class="drop-shadow-lg bg-white bg-opacity-90 mt-12 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase dark:text-gray-400"> 
                             <tr>
-                                <th scope="col" class="px-6 py-3 bg-indigo-100 dark:bg-gray-800">
+                                <th scope="col" class="px-6 py-3 bg-indigo-200 dark:bg-gray-800">
                                 </th> 
                                 {horairesArray && horairesArray.map((horaire, index) => (
-                                    <th key={index} scope="col" class="px-7 py-3 bg-indigo-100 font-bold text-xl border-l border-indigo-200 dark:border-gray-700">
+                                    <th key={index} scope="col" class="px-7 py-3 bg-indigo-200 font-bold text-xl border-l border-indigo-200 dark:border-gray-700">
                                         {obtenirJourSemaine(new Date(horaire.date))} {horaire.horaire_debut.split(':')[0]}-{horaire.horaire_fin.split(':')[0]}
                                     </th>
                                 ))}
@@ -193,7 +193,7 @@ const CalendrierEspaceAnimation = () => {
                         <tbody> 
                             {zones && zones.map((zone, index) => (
                                 <tr class="border-t border-indigo-200 dark:border-gray-700">
-                                    <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-100 dark:text-white dark:bg-gray-800">
+                                    <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-200 dark:text-white dark:bg-gray-800">
                                         {zone.nom_zb}
                                     </th> 
                                     {zone.id && tabPostHoraire[zone.id] && tabPostHoraire[zone.id].map((horraire, index) => (
@@ -210,9 +210,9 @@ const CalendrierEspaceAnimation = () => {
                                                             backgroundColor: getColorForPercentage(horraire.length / (tabPostNbMax[zone.id][tabHoraire[index]] || 0)), 
                                                         }} 
                                                     />   
-                                                    { (   
+                                                    { ( tabPostNbMax[zone.id][tabHoraire[index]] &&  
                                                         <input 
-                                                            className='p-3 m-1 checked:bg-[#7BC42F]'   
+                                                            className='p-3 m-1 text-indigo-600 focus:ring-indigo-500 focus:ring-2'   
                                                             type="checkbox"    
                                                             onChange={() => handleSlotClick(zone.id, tabHoraire[index])} 
                                                             

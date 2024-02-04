@@ -146,7 +146,7 @@ const CalendrierPost = () => {
     }
  
     return (
-        <div class='p-6 bg-white m-9 rounded-3xl flex items-center justify-center min-h-xl' >
+        <div class='p-6 bg-white bg-opacity-85 m-9 rounded-3xl flex items-center justify-center min-h-xl' >
             <div class="relative overflow-x-auto  sm:rounded-lg max-w-7xl min-h-full">
                 <div class="flex flex-row cursor-pointer">
                     <h1 class=" px-[300px] ml-[400px] py-4 text-gray-50 bg-[#4A4BA8] font-bold text-3xl rounded-xl">
@@ -162,13 +162,13 @@ const CalendrierPost = () => {
                     </h1>
                 </div>
 
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <table class="drop-shadow-lg bg-white bg-opacity-90 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3 bg-indigo-100 dark:bg-gray-800">
+                            <th scope="col" class="px-6 py-3 bg-indigo-200 dark:bg-gray-800">
                             </th>
                             {horaires && horaires.map((horaire, index) => (
-                                <th key={index} scope="col" class="px-7 py-3 bg-indigo-100 font-bold text-xl border-l border-indigo-200 dark:border-gray-700">
+                                <th key={index} scope="col" class="px-7 py-3 bg-indigo-200 font-bold text-xl border-l border-300 dark:border-gray-700">
                                     {horaire.horaire_debut.split(':')[0]}-{horaire.horaire_fin.split(':')[0]}
                                 </th>
                             ))}
@@ -176,12 +176,12 @@ const CalendrierPost = () => {
                     </thead>
                     <tbody> 
                         {posts && posts.map((post, index) => (
-                            <tr class="border-t border-indigo-200 dark:border-gray-700">
-                                <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-100 dark:text-white dark:bg-gray-800">
+                            <tr class="border-t border-indigo-300 dark:border-gray-700">
+                                <th scope="row" class="text-xl px-6 py-7 font-medium text-gray-900 whitespace-nowrap bg-indigo-200 dark:text-white dark:bg-gray-800">
                                     {post.nom_post}
                                 </th> 
                                 {post.id && tabPostHoraire[post.id] && tabPostHoraire[post.id].map((horraire, index) => (
-                                    <td className='px-4 bg-black-500 tooltip border-l border-indigo-200' key={index}>  
+                                    <td className='px-4 bg-black-500 tooltip border-l border-indigo-300' key={index}>  
                                         <div className={`w-full bg-gray-400 rounded-full h-5 dark:bg-gray-700 text-center relative` }> 
                                         
                                         {post.id && tabPostNbMax[post.id] && tabPostNbMax[post.id][index+2] && (

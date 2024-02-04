@@ -382,6 +382,15 @@ import React from "react";
           <NavListMenu />
           <NavListMenu2/>
 
+          <Typography 
+            as={Link}
+            to="/jeux" 
+            variant="small"
+            className="font-medium text-indigo-900"
+          >
+            <ListItem className="flex items-center gap-2 py-2 pr-4">Jeux</ListItem>
+          </Typography>
+
           {chercheHebergement && (
 
           <Typography

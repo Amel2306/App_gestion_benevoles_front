@@ -68,7 +68,9 @@ const GestionDemandes = () => {
                 </div>
             )}
             <div className={` ${voirDemandes && 'blur'} flex flex-wrap align-center justify-center`} >
-                <h1>Liste des demandes d'activités</h1>
+                <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
+                    Liste des demandes d'activités
+                </h1>
                 <div className='flex flex-wrap align-center justify-center'>
                     {Object.entries(usersWithDemands).map(([userId, demands]) => (
                         <div className='m-4 flex flex-wrap align-center justify-center cursor-pointer overflow-hidden relative transition-all duration-500 hover:translate-y-2 w-72 h-50 bg-neutral-50 rounded-lg shadow-xl  items-center justify-evenly gap-2 p-2 before:absolute before:w-full hover:before:top-0 before:duration-500 before:-top-1 before:h-1 before:bg-indigo-500' key={userId}>

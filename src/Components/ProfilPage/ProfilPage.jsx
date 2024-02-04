@@ -30,6 +30,9 @@ const ProfilPage = () => {
     const [demandesAccepteesParHebergement, setDemandesAccepteesParHebergement] = useState([]);
     const [validatedActivities, setValidatedActivities] = useState([]);
 
+    const [creneauxInfo, setCreneauxInfo] = useState({});
+    const [zoneInfo, setZoneInfo] = useState({})
+
     const {user_id} = useParams()
 
 
@@ -50,7 +53,59 @@ const ProfilPage = () => {
                     console.error('Erreur lors de la récupération du nombre de demandes acceptées pour tous les hébergements :', error);
                 });
         }
-    }, [userHebergements]);
+
+        async function fetchData() {
+            try {
+                const creneauxResponse = await axiosInstance.get('creneaux');
+                const creneaux = creneauxResponse.data;
+                console.log(creneaux);
+
+                const newCreneauxInfo = {};
+                const joursSemaine = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+
+                for (const creneau of creneaux) {
+                    console.log(creneau)
+                    const jour = joursSemaine[new Date(creneau.date).getDay()];
+                    console.log(jour)
+                    const heureDebut = creneau.horaire_debut.split(':')[0];
+                    const heureFin = creneau.horaire_fin.split(':')[0];
+                    console.log(creneau);
+
+                    const creneauInfoText = `${jour} : ${heureDebut}-${heureFin}`;
+                    console.log(jour);
+                    newCreneauxInfo[creneau.id] = creneauInfoText;
+                };
+
+                setCreneauxInfo(newCreneauxInfo);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des créneaux :', error);
+            }
+        }
+        async function fetchData2() {
+            try {
+                const creneauxResponse = await axiosInstance.get('zonebenevole');
+                const creneaux = creneauxResponse.data;
+                console.log(creneaux);
+
+                const newCreneauxInfo = {};
+
+                for (const creneau of creneaux) {
+
+                    newCreneauxInfo[creneau.id] = creneau.nom_zb;
+                };
+
+                setZoneInfo(newCreneauxInfo);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des zones :', error);
+            }
+        }
+
+        if (Object.keys(creneauxInfo).length === 0) {
+            fetchData();
+        }
+        fetchData2();
+
+    }, []);
     
 
     const fetchUserInfo = () => {
@@ -71,20 +126,21 @@ const ProfilPage = () => {
                     setIsLoading(false);
                 });
 
-            /*axiosInstance.get(`hebergement/user/${userId}`)
+            axiosInstance.get(`hebergement/user/${userId}`)
                 .then(response => {
                     setUserHebergements(response.data);
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des informations de l\'hebergement :', error);
-                });*/
-                /*axiosInstance.get(`/demanderactivtie/user/${userId}`)
+                });
+                axiosInstance.get(`/demanderactivtie/user/${userId}`)
                 .then(response => {
                     setValidatedActivities(response.data);
+                    console.log(response)
                 })
                 .catch(error => {
                     console.error('Error fetching validated activities:', error);
-                });*/
+                });
         }
     };
 
@@ -415,6 +471,95 @@ const ProfilPage = () => {
 </div>
 </div>
 
+<div className="mt-6 pl-[100px] pr-[100px] flex justify-center">
+    <div className=" rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
+        <div className='flex'>
+        <h2 className="text-2xl font-bold text-indigo-900">Mes demandes en attente</h2>
+        <div className='pl-[1030px]'>
+        </div>
+        </div>
+
+        <div className='flex flex-wrap justify-left'>
+            {validatedActivities && validatedActivities.map((demande, index) => (  
+                demande.accepte === 0 && demande.archive === 0 && 
+                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 ">
+                    <div className='pl-2'>
+                        <div className='inline-flex items-center'>
+                            
+                            <h3 className="text-xl font-semibold">Identifiant de la demande : {demande.id}</h3>
+                            
+                        </div>
+                        <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />
+                                {demande.accepte === 0 && demande.archive === 0 ? "En attente" : demande.accepte === 1 ? "Accepte" : "Refusé"}
+                        </p>
+                        <p>
+                            <CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> 
+                            {creneauxInfo[demande.creneau_id]}
+                        </p>
+                        <p>
+                            <MapPinIcon className="h-5 w-5 mr-1 inline-block" />
+                            {zoneInfo[demande.zonebenevole_id]}
+                        </p>
+                        <div className='my-4'>
+                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(demande.id)}>
+                                <TrashIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
+                                Supprimer
+                            </a>
+                            
+                            
+                        </div>
+                       
+                    </div>
+                    </div>
+))}
+</div>
+</div>
+</div>
+
+<div className="mt-6 pl-[100px] pr-[100px] flex justify-center">
+    <div className=" rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
+        <div className='flex'>
+        <h2 className="text-2xl font-bold text-indigo-900">Mes demandes acceptées </h2>
+        <div className='pl-[1030px]'>
+        </div>
+        </div>
+
+        <div className='flex flex-wrap justify-left'>
+            {validatedActivities && validatedActivities.map((demande, index) => (  
+                demande.accepte === 1 &&
+                <div key={index} className="rounded-lg bg-opacity-85 bg-white p-8 shadow-lg m-4 ">
+                    <div className='pl-2'>
+                        <div className='inline-flex items-center'>
+                            
+                            <h3 className="text-xl font-semibold">Identifiant de la demande : {demande.id}</h3>
+                            
+                        </div>
+                        <p><UserGroupIcon className="h-5 w-5 mr-1 inline-block" />
+                                {demande.accepte === 0 && demande.archive === 0 ? "En attente" : demande.accepte === 1 ? "Accepte" : "Refusé"}
+                        </p>
+                        <p>
+                            <CalendarDaysIcon className="h-5 w-5 mr-1 inline-block" /> 
+                            {creneauxInfo[demande.creneau_id]}
+                        </p>
+                        <p>
+                            <MapPinIcon className="h-5 w-5 mr-1 inline-block" />
+                            {zoneInfo[demande.zonebenevole_id]}
+                        </p>
+                        <div className='my-4'>
+                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(demande.id)}>
+                                <TrashIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
+                                Supprimer
+                            </a>
+                            
+                            
+                        </div>
+                       
+                    </div>
+                    </div>
+))}
+</div>
+</div>
+</div>
 
     </div> 
     </div> 

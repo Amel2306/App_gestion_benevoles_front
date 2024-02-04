@@ -17,6 +17,8 @@ import ListeDemandesActivites from './Components/Informations/ListeDemandesActiv
 import ImporterCSV from './Components/Dashboard/ImporterCSV.jsx';
 import GestionDemandes from './Components/Dashboard/GestionDemandes.jsx';
 import GestionUtilisateur from './Components/Dashboard/GestionUtilisateur.jsx';
+import ListeJeux from './Components/Jeux/ListeJeux';
+import DetailsJeu from './Components/Jeux/DetailsJeu';
 
 import { NavbarWithMegaMenu } from './Components/Navbar/Navbar.jsx';
 
@@ -49,6 +51,9 @@ const Routess = () => {
                     <Route path="/importer_un_csv" element={<ImporterCSV />} />
                     <Route path="/gestion_des_demandes" element={<GestionDemandes />} />
                     <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
+                    <Route path="/jeux" element={<ListeJeux />} />
+                    <Route path="/jeuDetails/:jeuId" element={<DetailsJeu />} />
+
 
                 </Routes>
             </div>
