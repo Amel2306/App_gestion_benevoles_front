@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosConfig';
 import ValidationDemande from './ValidationDemande';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import "./CalendrierStyle.css"
 import '../ProfilPage/ModifyProfilPage.css'
  
 const CalendrierEspaceAnimation = () => {
 
     const location = useLocation();
-
+    
     const listePostHoraire = location.state && location.state.selectedSlot;
 
     const allHoraires = location.state && location.state.horaires
 
-    const navigate = useNavigate();
 
     const [zones, setZones] = useState([]); 
     const [horaires, setHoraires] = useState(new Set());
@@ -23,7 +22,7 @@ const CalendrierEspaceAnimation = () => {
     const [selectedSlot, setSelectedSlot] = useState([]); 
     const [tabHoraire, setTabHoraire]= useState([]);
     const [hasSendDemande,setHasSendDemande] = useState(false);
-
+    const [i,setI] = useState(0);
 
     useEffect( () => { 
 
@@ -104,12 +103,15 @@ const CalendrierEspaceAnimation = () => {
                     updatedTabPH[zone.id] = tabNbMax;
                 }));
                 setTabPostNbMax(updatedTabPH); 
-            };  
+            };
+            if (i < 6) {
+                setI(i+1)
+            }
 
             fetchData();
             fetchData2();
         }
-    ,[]); 
+    ,[i]);  
 
     const getColorForPercentage = (percentage) => {
         if ( percentage < 0.25) {

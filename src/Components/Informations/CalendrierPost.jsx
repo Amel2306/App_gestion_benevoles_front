@@ -13,7 +13,9 @@ const CalendrierPost = () => {
     const [tabPostNbMax, setTabPostNbMax] = useState({})
     const [selectedSlot, setSelectedSlot] = useState([]);   
     const [chooseJeuZone, setChooseJeuZone] = useState(false)
-  
+    const [i,setI] = useState(0);
+
+                                    
     useEffect( () => { 
             axiosInstance.get(`post`)
             .then(response => {
@@ -38,7 +40,8 @@ const CalendrierPost = () => {
                     await Promise.all(horaires.map(async horaire => { 
                         try {
                             const response = await axiosInstance.get(`demanderactivtie/postCreneau/${post.id}/${horaire.id}`);
-                            tabH.push(response.data.flat());
+                            const dataColle = await Array.isArray(response.data) ? response.data.flat() : response.data;
+                            tabH.push(dataColle);
                         } catch (error) { 
                             console.error('Erreur lors de la récupération des informations de demande par horaire et post :', error);
                         }
@@ -61,21 +64,25 @@ const CalendrierPost = () => {
                                 for (const creneau of  responseTraite) {
                                     nbMax = nbMax+ creneau.nb_benevoles_max 
                                 }
-                                tabNbMax[horaire.id] = nbMax
+                                tabNbMax[horaire.id] = nbMax 
                             }
                         } catch (error) {
                             console.error('Erreur lors de la récupération des informations de demande par horaire et post :', error);
                         }
                     }));
                     updatedTabPH[post.id] = tabNbMax;
-                }));
+                }));   
                 setTabPostNbMax(updatedTabPH);
             };
 
-            fetchData();
+            fetchData(); 
             fetchData2();
+            if (i < 15) {
+                setI(i+1)
+                console.log(i)
+            }
         }
-    ,[]);
+    ,[i]); 
 
     const getColorForPercentage = (percentage) => {
         if ( percentage < 0.25) {

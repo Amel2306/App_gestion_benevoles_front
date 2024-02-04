@@ -3,7 +3,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import {useNavigate} from 'react-router-dom';
 
 
-const ValidationDemande = ({ accommodationId, onClose, updateAccommodationInfo }) => {
+const ValidationDemande = () => {
 
     const navigate = useNavigate();
 

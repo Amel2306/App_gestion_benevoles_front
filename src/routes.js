@@ -13,6 +13,7 @@ import Cuisine from './Components/Informations/Cuisine.jsx'
 import ForumAssociation from './Components/Informations/ForumAssociation.jsx'
 import Tambola from './Components/Informations/Tambola.jsx'
 import VenteRestauration from './Components/Informations/VenteRestauration.jsx'
+import ListeDemandesActivites from './Components/Informations/ListeDemandesActivites';
 
 import { NavbarWithMegaMenu } from './Components/Navbar/Navbar.jsx';
 
@@ -37,6 +38,7 @@ const Routess = () => {
                     <Route path="/forum_association" element={<ForumAssociation />} />
                     <Route path="/calendrier_post" element={<CalendrierPost />} />
                     <Route path="/calendrier_espace_animation" element={<CalendrierEspaceAnimation />} />
+                    <Route path="/liste_demandes_activites" element={<ListeDemandesActivites />} />
                 </Routes>
             </div>
         </Router>
