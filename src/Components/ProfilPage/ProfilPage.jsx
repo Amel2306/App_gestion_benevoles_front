@@ -59,7 +59,7 @@ const ProfilPage = () => {
         if (user_id) {
             userId = user_id
         }
-        
+
         if (userId) {
             axiosInstance.get(`users/${userId}`)
                 .then(response => {
@@ -71,20 +71,20 @@ const ProfilPage = () => {
                     setIsLoading(false);
                 });
 
-            axiosInstance.get(`hebergement/user/${userId}`)
+            /*axiosInstance.get(`hebergement/user/${userId}`)
                 .then(response => {
                     setUserHebergements(response.data);
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des informations de l\'hebergement :', error);
-                });
-                axiosInstance.get(`/demanderactivtie/user/${userId}`)
+                });*/
+                /*axiosInstance.get(`/demanderactivtie/user/${userId}`)
                 .then(response => {
                     setValidatedActivities(response.data);
                 })
                 .catch(error => {
                     console.error('Error fetching validated activities:', error);
-                });
+                });*/
         }
     };
 

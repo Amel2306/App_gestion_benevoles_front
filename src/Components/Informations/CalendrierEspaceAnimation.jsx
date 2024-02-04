@@ -164,7 +164,7 @@ const CalendrierEspaceAnimation = () => {
 
     const  obtenirJourSemaine = (date) => {
         const joursSemaine = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche" ];
-        const jour = joursSemaine[date.getDay()];   
+        const jour = joursSemaine[date.getDay()];
         return jour;
     }
  
