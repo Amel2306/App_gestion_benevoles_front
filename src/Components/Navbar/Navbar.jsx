@@ -22,6 +22,8 @@ import React from "react";
     ChevronDownIcon,
     Bars3Icon,
     XMarkIcon,
+    ArrowDownOnSquareIcon,
+    DocumentPlusIcon
   } from "@heroicons/react/24/outline";
   import {
     PuzzlePieceIcon,
@@ -31,7 +33,8 @@ import React from "react";
     CakeIcon,
     ChatBubbleLeftRightIcon,
     BriefcaseIcon,
-    MapIcon
+    MapIcon,
+    UserGroupIcon
   } from "@heroicons/react/24/solid";
 
   import logo_navbar from '../Assets/logo_nav.png'
@@ -224,8 +227,96 @@ import React from "react";
           </React.Fragment>
         );
   }
+
+  const DashBoardItems = [
+    
+    {
+      title: "Importer un CSV",
+      icon: ArrowDownOnSquareIcon      ,
+    },
+    {
+      title: "Gestion des demandes",
+      icon: DocumentPlusIcon,
+    },
+    {
+      title: "Gestion utilisateur",
+      icon: UserGroupIcon,
+    },
+  ];
   
+  function DashboardMenu() {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   
+    const renderItems = DashBoardItems.map(({ icon, title }, key) => {
+      const url = `/${title.toLowerCase().replace(/\s+/g, '_')}`;
+  
+      
+      return (
+        <Link to={url} key={key}>
+          <MenuItem className="flex items-center gap-3 rounded-lg">
+            <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2">
+              {React.createElement(icon, {
+                strokeWidth: 2,
+                className: "h-6 text-gray-900 w-6",
+              })}
+            </div>
+            <div>
+              <Typography
+                variant="h6"
+                className="flex items-center text-sm font-bold text-black"
+              >
+                {title}
+              </Typography>
+            </div>
+          </MenuItem>
+        </Link>
+      );
+    });
+    return (
+      <React.Fragment>
+        <Menu
+          open={isMenuOpen}
+          handler={setIsMenuOpen}
+          offset={{ mainAxis: 20 }}
+          placement="bottom"
+          allowHover={true}
+        >
+          <MenuHandler>
+            <Typography as="div" variant="small" className="font-medium">
+              <ListItem
+                className="flex items-center gap-2 py-2 pr-4 font-medium text-indigo-900"
+                selected={isMenuOpen || isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+              >
+                Calendrier
+                <ChevronDownIcon
+                  strokeWidth={2.5}
+                  className={`hidden h-3 w-3 transition-transform lg:block ${
+                    isMenuOpen ? "rotate-180" : ""
+                  }`}
+                />
+                <ChevronDownIcon
+                  strokeWidth={2.5}
+                  className={`block h-3 w-3 transition-transform lg:hidden ${
+                    isMobileMenuOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </ListItem>
+            </Typography>
+          </MenuHandler>
+          <MenuList className="max-w-screen-xl rounded-xl lg:block">
+            <ul className="grid grid-cols-3 gap-y-2 outline-none outline-0">
+              {renderItems}
+            </ul>
+          </MenuList>
+        </Menu>
+        <div className="block lg:hidden">
+          <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
+        </div>
+      </React.Fragment>
+    );
+  }
   
   export function NavbarWithMegaMenu() {
       
@@ -233,7 +324,7 @@ import React from "react";
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
     const [chercheHebergement, setChercheHebergement] = React.useState(false);
 
-    
+
      
 
     const navigate = useNavigate();
@@ -304,6 +395,8 @@ import React from "react";
             </ListItem>
           </Typography>
           )}
+          <DashboardMenu />
+
         </List>
           </div>
           <div className="hidden gap-2 lg:flex">
@@ -366,9 +459,12 @@ import React from "react";
             </ListItem>
           </Typography>
           )}
+           <DashboardMenu />
+
         </List>
           <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
           {isAuthenticated && ( 
+
           <Link to="/profil" className="text-indigo-900">
             <Button
               variant="outlined"
@@ -387,6 +483,7 @@ import React from "react";
             </Link>
           </div>
         </Collapse>
+
       </Navbar>
     );
   }

@@ -13,6 +13,9 @@ import Cuisine from './Components/Informations/Cuisine.jsx'
 import ForumAssociation from './Components/Informations/ForumAssociation.jsx'
 import Tambola from './Components/Informations/Tambola.jsx'
 import VenteRestauration from './Components/Informations/VenteRestauration.jsx'
+import ImporterCSV from './Components/Dashboard/ImporterCSV.jsx';
+import GestionDemandes from './Components/Dashboard/GestionDemandes.jsx';
+import GestionUtilisateur from './Components/Dashboard/GestionUtilisateur.jsx';
 
 import { NavbarWithMegaMenu } from './Components/Navbar/Navbar.jsx';
 
@@ -37,6 +40,14 @@ const Routess = () => {
                     <Route path="/forum_association" element={<ForumAssociation />} />
                     <Route path="/calendrier_post" element={<CalendrierPost />} />
                     <Route path="/calendrier_espace_animation" element={<CalendrierEspaceAnimation />} />
+                    <Route path="/calendrier_espace_animation" element={<CalendrierEspaceAnimation />} />
+                    <Route path="/importer_un_csv" element={<ImporterCSV />} />
+                    <Route path="/gestion_des_demandes" element={<GestionDemandes />} />
+                    <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
+
+                    
+
+
                 </Routes>
             </div>
         </Router>

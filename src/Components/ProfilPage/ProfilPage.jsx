@@ -26,9 +26,10 @@ const ProfilPage = () => {
     const [accommodationIdToRemove, setAccommodationIdToRemove] = useState(null);
     const [isDemande,setIsDemande] = useState(false);
     const [accommodationIdDemandes,setAccommodationIdDemandes] = useState(false);
-    const [nombreDemandesAcceptees, setNombreDemandesAcceptees] = useState(0);
-
     const [demandesAccepteesParHebergement, setDemandesAccepteesParHebergement] = useState([]);
+    const [validatedActivities, setValidatedActivities] = useState([]);
+
+
 
 
 
@@ -70,6 +71,13 @@ const ProfilPage = () => {
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des informations de l\'hebergement :', error);
+                });
+                axiosInstance.get(`/demanderactivtie/user/${userId}`)
+                .then(response => {
+                    setValidatedActivities(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching validated activities:', error);
                 });
         }
     };

@@ -36,7 +36,7 @@ const Hebergement = () => {
                 fetchUserPseudos(hebergementsVisibles);
             } catch (error) {
                 console.error('Erreur lors de la récupération des hébergements :', error);
-            }
+            } 
         }; 
 
         fetchHebergements();
