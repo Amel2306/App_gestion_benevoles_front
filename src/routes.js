@@ -13,7 +13,13 @@ import Cuisine from './Components/Informations/Cuisine.jsx'
 import ForumAssociation from './Components/Informations/ForumAssociation.jsx'
 import Tambola from './Components/Informations/Tambola.jsx'
 import VenteRestauration from './Components/Informations/VenteRestauration.jsx'
+<<<<<<< HEAD
 import ListeDemandesActivites from './Components/Informations/ListeDemandesActivites';
+=======
+import ImporterCSV from './Components/Dashboard/ImporterCSV.jsx';
+import GestionDemandes from './Components/Dashboard/GestionDemandes.jsx';
+import GestionUtilisateur from './Components/Dashboard/GestionUtilisateur.jsx';
+>>>>>>> 8c2445a2120b0d4c77f7272c42388731d91cfc90
 
 import { NavbarWithMegaMenu } from './Components/Navbar/Navbar.jsx';
 
@@ -38,7 +44,18 @@ const Routess = () => {
                     <Route path="/forum_association" element={<ForumAssociation />} />
                     <Route path="/calendrier_post" element={<CalendrierPost />} />
                     <Route path="/calendrier_espace_animation" element={<CalendrierEspaceAnimation />} />
+<<<<<<< HEAD
                     <Route path="/liste_demandes_activites" element={<ListeDemandesActivites />} />
+=======
+                    <Route path="/calendrier_espace_animation" element={<CalendrierEspaceAnimation />} />
+                    <Route path="/importer_un_csv" element={<ImporterCSV />} />
+                    <Route path="/gestion_des_demandes" element={<GestionDemandes />} />
+                    <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
+
+                    
+
+
+>>>>>>> 8c2445a2120b0d4c77f7272c42388731d91cfc90
                 </Routes>
             </div>
         </Router>

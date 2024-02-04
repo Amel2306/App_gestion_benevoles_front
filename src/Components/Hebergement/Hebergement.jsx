@@ -8,6 +8,8 @@ const Hebergement = () => {
     const [userPseudos, setUserPseudos] = useState({});
     const [demandesEnvoyees, setDemandesEnvoyees] = useState([]);
     const [demandeExistante, setDemandeExistante] = useState(false); 
+    const [demandeExistanteParHebergement, setDemandeExistanteParHebergement] = useState({}); // État pour stocker les demandes existantes pour chaque hébergement
+
 
 
 
@@ -18,29 +20,26 @@ const Hebergement = () => {
                 const response = await axiosInstance.get('/hebergement');
                 const hebergementsVisibles = response.data.filter(hebergement => hebergement.visible === 1);
                 setHebergements(hebergementsVisibles);
-    
-                const promises = hebergementsVisibles.map(hebergement => {
-                    return getNombreDemandesAcceptees(hebergement.id);
+
+                const promises = hebergementsVisibles.map(async hebergement => {
+                    const nombreDemandesAcceptees = await getNombreDemandesAcceptees(hebergement.id);
+                    setDemandesAccepteesParHebergement(prevState => ({ ...prevState, [hebergement.id]: nombreDemandesAcceptees }));
+
+                    // Récupérer les demandes existantes pour chaque hébergement
+                    const demandes = await fetchDemandesByHebergementId(hebergement.id);
+                    const demandeExistante = demandes.some(demande => demande.userId === parseInt(localStorage.getItem('userId')));
+                    setDemandeExistanteParHebergement(prevState => ({ ...prevState, [hebergement.id]: demandeExistante }));
                 });
-    
-                Promise.all(promises)
-                    .then(nombreDemandes => {
-                        const updatedDemandesAcceptees = {};
-                        hebergementsVisibles.forEach((hebergement, index) => {
-                            updatedDemandesAcceptees[hebergement.id] = nombreDemandes[index];
-                        });
-                        setDemandesAccepteesParHebergement(updatedDemandesAcceptees);
-                        fetchUserPseudos(hebergementsVisibles);
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la récupération du nombre de demandes acceptées pour tous les hébergements :', error);
-                    });
+
+                await Promise.all(promises);
+
+                fetchUserPseudos(hebergementsVisibles);
             } catch (error) {
                 console.error('Erreur lors de la récupération des hébergements :', error);
-            }
-        };
-    
-        fetchHebergements();  
+            } 
+        }; 
+
+        fetchHebergements();
     }, []);
     
 
@@ -89,6 +88,20 @@ const Hebergement = () => {
             });
     };
 
+    const updateDemandeExistanteParHebergement = async () => {
+        try {
+            const newDemandesExistantes = {};
+            for (const hebergement of hebergements) {
+                const demandes = await fetchDemandesByHebergementId(hebergement.id);
+                const demandeExistante = demandes.some(demande => demande.userId === parseInt(localStorage.getItem('userId')));
+                newDemandesExistantes[hebergement.id] = demandeExistante;
+            }
+            setDemandeExistanteParHebergement(newDemandesExistantes);
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des demandes existantes :', error);
+        }
+    };
+
     const handleDemande = async (userId, hebergementId) => {
         try {
             const demandes = await fetchDemandesByHebergementId(hebergementId);    
@@ -106,6 +119,8 @@ const Hebergement = () => {
                 };
                 await axiosInstance.post('/demanderlogement/', requestData);
                 console.log('Demande de logement envoyée avec succès');
+                updateDemandeExistanteParHebergement();
+
             } else {
                 console.log('Une demande existe déjà pour cet utilisateur et cet hébergement.');
             }
@@ -115,6 +130,7 @@ const Hebergement = () => {
             console.error('Erreur lors de l\'envoi de la demande de logement :', error);
         }
     };
+    
     
 
     const fetchDemandesByHebergementId = async (hebergementId) => {
@@ -146,10 +162,10 @@ const Hebergement = () => {
                             <div className="pl-[250px]">
                             <button 
                                     onClick={() => handleDemande(localStorage.getItem('userId'), hebergement.id)} 
-                                    className={`bg-lime-600 hover:bg-lime-500 text-white font-bold py-2 px-4 rounded-full mt-2`}
-                                    disabled={demandeExistante}
+                                    className={`px-4 py-2 rounded-full ${demandeExistanteParHebergement[hebergement.id]? ' bg-gray-400 cursor-not-allowed' : 'rounded-full bg-lime-600 hover:bg-lime-500 '
+                                }rounded-full text-white font-bold`}
                                 >
-                                    Envoyer une demande
+                                        {demandeExistanteParHebergement[hebergement.id] ? 'Demande envoyée' : 'Envoyer une demande'}
                                 </button>                            </div>
                         </div>
                     </div>
