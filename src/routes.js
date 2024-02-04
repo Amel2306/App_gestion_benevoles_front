@@ -50,10 +50,6 @@ const Routess = () => {
                     <Route path="/gestion_des_demandes" element={<GestionDemandes />} />
                     <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
 
-                    
-
-
-
                 </Routes>
             </div>
         </Router>
