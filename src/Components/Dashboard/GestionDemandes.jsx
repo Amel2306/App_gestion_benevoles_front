@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 import '../ProfilPage/ModifyProfilPage.css'
 import VoirDemandes from '../Informations/VoirDemandes';
@@ -9,6 +10,8 @@ const GestionDemandes = () => {
     const [voirDemandes,setVoirdemandes] = useState(false);
     const [selectedList, setSelectedList] = useState([])
     const [pseudoUser, setPseudoUser] = useState("")
+
+    const navigate = useNavigate(); 
 
 
     useEffect(() => {
@@ -49,6 +52,10 @@ const GestionDemandes = () => {
         setVoirdemandes(false)
     }
 
+    const handleClickProfil = (userId) => {
+        navigate(`/profil/${userId}`)
+    }
+
     return (
         <div>
             { voirDemandes && (   
@@ -75,7 +82,7 @@ const GestionDemandes = () => {
                                 <button className="text-sm rounded-full bg-lime-600 px-3 py-2.5 text-white hover:bg-lime-500 mt-3 mr-2 my-3" onClick={() => handleClickDemandes(demands,users[userId].pseudo)}>
                                         Voir demandes
                                 </button>
-                                <button className="text-sm rounded-full bg-fuchsia-600 px-3 py-2.5 text-white hover:bg-fuchsia-500 mt-3 my-3" >
+                                <button className="text-sm rounded-full bg-fuchsia-600 px-3 py-2.5 text-white hover:bg-fuchsia-500 mt-3 my-3" onClick={() =>handleClickProfil(userId)}>
                                         Profil
                                 </button>
                             </div>

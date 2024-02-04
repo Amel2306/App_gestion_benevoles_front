@@ -8,6 +8,7 @@ import AddAccommodationPage from './AddAccomodationPage.jsx';
 import DeletePage from './DeletePage.jsx';
 import DeleteAccommodationPage from './DeleteAccommodationPage.jsx';
 import DemandeAccomodationPage from './DemandeAccommodation.jsx';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -29,7 +30,7 @@ const ProfilPage = () => {
     const [demandesAccepteesParHebergement, setDemandesAccepteesParHebergement] = useState([]);
     const [validatedActivities, setValidatedActivities] = useState([]);
 
-
+    const {user_id} = useParams()
 
 
 
@@ -53,7 +54,12 @@ const ProfilPage = () => {
     
 
     const fetchUserInfo = () => {
-        const userId = localStorage.getItem('userId');
+        
+        let userId = localStorage.getItem('userId');;
+        if (user_id) {
+            userId = user_id
+        }
+        
         if (userId) {
             axiosInstance.get(`users/${userId}`)
                 .then(response => {
