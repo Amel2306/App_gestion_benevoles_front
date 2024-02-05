@@ -233,7 +233,7 @@ const CalendrierEspaceAnimation = () => {
                     </table>
                     <div className='align-center justify-center'>
                         <button onClick={() => handleSendDemande()}
-                            class="my-6 ml-[1000px] relative overflow-hidden rounded-lg h-12 w-[200px] group hover:animate-pulse hover:shadow-lg hover:scale-105 transition duration-500 before:absolute before:inset-0 before:rounded-lg before:bg-lime-500"
+                            class="my-6 ml-[1000px] relative overflow-hidden rounded-lg h-12 w-[200px] group  hover:shadow-lg hover:scale-105 transition duration-500 before:absolute before:inset-0 before:rounded-lg before:bg-lime-500"
                             >
                             <span class="relative text-white font-bold px-8 py-8"> Valider </span>
                         </button> 
