@@ -88,7 +88,7 @@ const VoirDemandes = ({ selectedList, pseudoUser, handleClose }) => {
                 <div className='flex flex-wrap align-left justify-left p-3 m-3'>
                     <ul>
                         {selectedList.map((item, index) => (
-                            <li className={` ${item.archive === 1 ? "bg-indigo-100" : "bg-fuchsia-100"} flex flex-row justify-between p-3 m-4 rounded-xl`} key={index}>
+                            <li className={` ${item.accepte === 1 ? "bg-lime-100" : item.archive === 1 ? "bg-indigo-100" : "bg-fuchsia-100"} flex flex-row justify-between p-3 m-4 rounded-xl`} key={index}>
                                 <div className='ml-2 flex flex-col'>
                                     <span>
                                         Créneau : 
@@ -97,7 +97,7 @@ const VoirDemandes = ({ selectedList, pseudoUser, handleClose }) => {
                                         {creneauxInfo[item.creneau_id]}
                                     </span>
                                 </div>
-                                <div className='mx-2 ml-14 flex flex-col    '>
+                                <div className='mx-2 ml-14 flex flex-col'>
                                     <span>
                                         Zone :
                                     </span>

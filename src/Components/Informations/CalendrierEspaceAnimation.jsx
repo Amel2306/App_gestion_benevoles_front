@@ -23,7 +23,6 @@ const CalendrierEspaceAnimation = () => {
     const [tabHoraire, setTabHoraire]= useState([]);
     const [hasSendDemande,setHasSendDemande] = useState(false);
     const [i,setI] = useState(0);
-    const [isLoading, setIsLoading] = 
 
     useEffect( () => { 
 

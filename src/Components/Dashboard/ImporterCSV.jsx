@@ -8,6 +8,8 @@ function ProfesseurFichier() {
   const [selectFile, setFile] = useState(null);
   const [nbErreur, setNb] = useState(0);
 
+  const navigate = useNavigate()
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFile(file);
@@ -53,7 +55,7 @@ function ProfesseurFichier() {
 
           console.log(formattedData);
 
-          try {
+
             await Promise.all(formattedData.map(async (rowData) => {
 
                 if (rowData.zone_plan) {
@@ -110,14 +112,11 @@ function ProfesseurFichier() {
                     }
                 }
               }
-            }));
-  
-          } catch (error) {
-               console.log("erruer d'ajout " )
-          }
+            }));          
         },
       });
     }
+    navigate(`/jeux`)
   };
   return (
     <div className="flex flex-col align-center justify-center text-center ">
