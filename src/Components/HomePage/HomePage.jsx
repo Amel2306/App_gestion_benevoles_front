@@ -21,7 +21,7 @@ const HomePage = () => {
             </div>
             
             <div className="text-center mb-8">
-    <h1 className="text-4xl font-bold mb-4">Bienvenue sur notre application</h1>
+    <h1 className="text-4xl font-bold mb-4">Sortons Jouer ! </h1>
     <p className="text-lg text-gray-700 leading-relaxed">
         <p>Bienvenue sur l'application de gestion de bénévoles pour le Festival du Jeu de Montpellier !</p>
 
