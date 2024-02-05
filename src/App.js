@@ -1,6 +1,6 @@
 import './App.css';
 //import LoginSignup from './Components/LoginSignup/LoginSignup';
-import Routes from './routes.js';
+import Routess from './routes.js';
 
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <div>
       
 
-      <Routes />
+      <Routess />
     </div>
   );
 }

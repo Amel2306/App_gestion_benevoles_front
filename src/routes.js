@@ -32,7 +32,7 @@ const Routess = () => {
             <NavbarWithMegaMenu />
                 <Routes>
                     <Route path="/"  element={<LoginSignup/>} />
-                    <Route path="home" element={<HomePage/>} />
+                    <Route path="/home" element={<HomePage/>} />
                     <Route path="/profil/" element={<ProfilPage/>} />
                     <Route path="/profil/:user_id" element={<ProfilPage/>} />
                     <Route path="/calendrier" element={<Calendrier/>} />
