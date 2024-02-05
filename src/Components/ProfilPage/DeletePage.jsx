@@ -19,6 +19,7 @@ const DeletePage = ({ onClose }) => {
                     localStorage.removeItem('user');
                     localStorage.setItem('isAuthenticated', false);
                     localStorage.removeItem('userRole');
+                    localStorage.removeItem('cherche_hebergement')
 
                     onClose();
                     navigate("/");
