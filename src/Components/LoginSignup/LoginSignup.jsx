@@ -63,7 +63,7 @@ const LoginSignup = () => {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('isAuthenticated',true);
 
-                    const userRole = response.data.existingUser.role;
+                    const userRole = response.data.newUser.role;
                     localStorage.setItem('userRole', userRole);
 
                      //vérification de la présence du token
