@@ -3,7 +3,6 @@ import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 
-
 const ZoneDetails = ({ zone, handleClose }) => {
     const navigate = useNavigate();
     const [creneauxInfo, setCreneauxInfo] = useState({});
@@ -112,101 +111,96 @@ const ZoneDetails = ({ zone, handleClose }) => {
 
     return (
         <div className="container rounded-lg bg-opacity-85 p-8 shadow-lg m-4 mr-20 ml-20">
-            <div className='flex'>
+            <div className='grid grid-cols-2 gap-4'>
                 <h2 className="text-2xl font-bold text-indigo-900 mb-5">Modifier un hébergement</h2>
-                <div className='align-right justify-righ pl-[18px]'>
+                <div className='flex items-end justify-end col-span-1'>
                     <button type="button" className="text-white bg-fuchsia-700 focus:outline-none hover:bg-fuchsia-500 focus:ring-4 focus:ring-white font-medium rounded-full text-sm px-2 py-2 me-2 mb-2" onClick={handleClose}>
                         <XMarkIcon className="h-5 w-5 inline-block" />
                     </button>
                 </div>
             </div>
-            <form className="w-full max-w-lg" onSubmit={handleSubmit}>
-                    <div className="w-full md:w-1/2 px-3 mb-6">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
-                            Nom de la zone :
+            <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+                <div className="col-span-1">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                        Nom de la zone :
+                        <input
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                            type="text"
+                            name="nom_zb"
+                            value={formData.nom_zb}
+                            onChange={handleInputChange}
+                        />
+                    </label>
+                </div>
+
+                <div className="col-span-1">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                        Post :
+                        <select
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                            name="post_id"
+                            value={formData.post_id}
+                            onChange={handleInputChange}
+                        >
+                            {posts.map((post) => (
+                                <option key={post.id} value={post.id}>
+                                    {post.nom_post}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+
+                <div className="col-span-1">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                        Zone plan :
+                        <select
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                            name="zone_plan_id"
+                            value={formData.zone_plan_id}
+                            onChange={handleInputChange}
+                        >
+                            {zones.map((zone) => (
+                                <option key={zone.id} value={zone.id}>
+                                    {zone.nom_zp}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+
+                <div className="col-span-1">
+                    {/* Liste des créneaux avec cases à cocher et champs de saisie pour le nombre maximum de bénévoles */}
+                    {Object.entries(creneauxInfo).map(([creneauId, creneauInfoText]) => (
+                        <div key={creneauId}>
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                                <input
+                                    type="checkbox"
+                                    value={creneauId}
+                                    checked={formData.selectedCreneaux.some((item) => item.creneauId === creneauId)}
+                                    onChange={(e) => handleCheckboxChange(creneauId, e.target.checked)}
+                                />
+                                {creneauInfoText}
+                            </label>
                             <input
                                 className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
-                                type="text"
-                                name="nom_zb"
-                                value={formData.nom_zb}
-                                onChange={handleInputChange}
+                                type="number"
+                                placeholder="Nombre max de bénévoles"
+                                value={formData.selectedCreneaux[creneauId] }
+                                onChange={(e) => handleInputChange({ target: { name: 'nb_benevoles_max', value: e.target.value, creneauId } })}
                             />
-                        </label>
-                    </div>
+                        </div>
+                    ))}
+                </div>
 
-                    <div className="w-full md:w-1/2 px-3 mb-6">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
-                            Post :
-                            <select
-                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
-                                name="post_id"
-                                value={formData.post_id}
-                                onChange={handleInputChange}
-                            >
-                                {posts.map((post) => (
-                                    <option key={post.id} value={post.id}>
-                                        {post.nom_post}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
-                            Zone plan :
-                            <select
-                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
-
-                                name="zone_plan_id"
-                                value={formData.zone_plan_id}
-                                onChange={handleInputChange}
-                            >
-                                {zones.map((zone) => (
-                                    <option key={zone.id} value={zone.id}>
-                                        {zone.nom_zp}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
-
-                    <div className="w-full md:w-1/2 px-3 mb-6">
-                        {/* Liste des créneaux avec cases à cocher et champs de saisie pour le nombre maximum de bénévoles */}
-                        {Object.entries(creneauxInfo).map(([creneauId, creneauInfoText]) => (
-                            <div key={creneauId}>
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
-                                    <input
-                                        type="checkbox"
-                                        value={creneauId}
-                                        checked={formData.selectedCreneaux.some((item) => item.creneauId === creneauId)}
-                                        onChange={(e) => handleCheckboxChange(creneauId, e.target.checked)}
-                                    />
-                                    {creneauInfoText}
-                                </label>
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
-                                    Nombre max de bénévoles
-                                </label>
-                                <input
-                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
-
-                                    type="number"
-                                    placeholder="Nombre max de bénévoles"
-                                    value={formData.selectedCreneaux[creneauId] }
-                                    onChange={(e) => handleInputChange({ target: { name: 'nb_benevoles_max', value: e.target.value, creneauId } })}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="w-full md:w-1/2 px-3 mb-6">
-                        <button className="rounded-full bg-lime-600 px-4 py-2 text-white hover:bg-indigo-700 transition-all" type="submit">
-                            Envoyer
-                            <PaperAirplaneIcon className="h-5 w-5 ml-2 inline-block" />
-                        </button>
-                    </div>
-                </form>
+                <div className="col-span-1">
+                    <button className="rounded-full bg-lime-600 px-4 py-2 text-white hover:bg-indigo-700 transition-all" type="submit">
+                        Envoyer
+                        <PaperAirplaneIcon className="h-5 w-5 ml-2 inline-block" />
+                    </button>
+                </div>
+            </form>
         </div>
- 
     );
 };
 

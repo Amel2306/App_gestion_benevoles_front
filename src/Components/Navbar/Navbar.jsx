@@ -34,7 +34,8 @@ import React from "react";
     ChatBubbleLeftRightIcon,
     BriefcaseIcon,
     MapIcon,
-    UserGroupIcon
+    UserGroupIcon,
+    PaperAirplaneIcon
   } from "@heroicons/react/24/solid";
 
   import logo_navbar from '../Assets/logo_nav.png'
@@ -253,6 +254,10 @@ import React from "react";
       title: "Gestion utilisateur",
       icon: UserGroupIcon,
     },
+    {
+      title: "Gestion zones",
+      icon: PaperAirplaneIcon,
+    }
   ];
   
   function DashboardMenu() {
