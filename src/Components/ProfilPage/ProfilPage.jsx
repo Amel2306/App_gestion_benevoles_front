@@ -369,7 +369,7 @@ const ProfilPage = () => {
                         </svg>
                     </figure>
                     <h2 className="text-2xl font-bold text-indigo-900 ">{userInfo?.pseudo || `${userInfo?.prenom}.${userInfo?.nom.charAt(0)}`}</h2>
-                    <p className="mb-8 text-gray-300 ">{userInfo?.biographie || <span style={{ color: 'gray' }}>Entrez votre biographie</span>}</p>
+                    <p className="mb-6 mt-4 text-gray-700 ">{userInfo?.biographie || <span style={{ color: 'gray' }}>Entrez votre biographie</span>}</p>
                     <div className="flex items-center justify-center">
                     <button className="rounded-full bg-indigo-900 px-4 py-2 text-white hover:bg-indigo-500" onClick={handleEdit}>
                             <PencilIcon className="h-6 w-6 mr-2 inline-block" />

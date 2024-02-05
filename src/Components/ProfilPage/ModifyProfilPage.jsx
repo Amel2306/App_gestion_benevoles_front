@@ -37,7 +37,9 @@ const ModifyProfilePage = ({ onClose, updateUserInfo,user_id }) => {
                         pseudo: response.data.pseudo || prevFormData.pseudo||null,
                         taille: response.data.taille || prevFormData.taille || null,
                         cherche_hebergement: response.data.cherche_hebergement || prevFormData.cherche_hebergement,
-                        role: response.data.role || prevFormData.role||null
+                        role: response.data.role || prevFormData.role||null,
+                        biographie: response.data.biographie || prevFormData.biographie||null
+
                     }));
                 })
                 .catch(error => {
@@ -106,6 +108,16 @@ const ModifyProfilePage = ({ onClose, updateUserInfo,user_id }) => {
                         </label>
                         <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="pseudo" type="text" placeholder="Pseudo" name="pseudo" value={formData.pseudo} onChange={handleChange} />
                     </div>
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="pseudo">
+                            Biographie
+                        </label>
+                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="biographie" type="text" placeholder="Biographie" name="biographie" value={formData.biographie} onChange={handleChange} />
+                    </div>
+                    <div className='w-full md:w-1/2 px-3 mb-6'>
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="pseudo">
+                            Taille
+                        </label>
                     <select
                         className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                         id="taille"
@@ -118,7 +130,7 @@ const ModifyProfilePage = ({ onClose, updateUserInfo,user_id }) => {
                             <option key={index} value={taille}>{taille}</option>
                         ))}
                     </select>
-
+                    </div>
 
                     <div className="w-full md:w-1/2 px-3 mb-6">
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="role">
