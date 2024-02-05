@@ -5,8 +5,13 @@ import axiosInstance from '../../config/axiosConfig';
 const GestionDemandes = () => {
     const [users, setUsers] = useState([]);
     const navigate = useNavigate(); 
+    const [userRole, setUserRole] = useState('');
+
 
     useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        setUserRole(role);
+
         const fetchData = async () => {
             try {
                 const usersResponse = await axiosInstance.get('users');
@@ -24,6 +29,8 @@ const GestionDemandes = () => {
     }
 
     return (
+        <div>
+        {userRole === 'admin' ? (
         <div>
             <div className={`flex flex-wrap align-center justify-center`} >
                 <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
@@ -47,6 +54,13 @@ const GestionDemandes = () => {
                     ))}
                 </div>
             </div>
+            </div>
+
+        ):(
+             <div>
+            <p className="bg-white bg-opacity-85 text-indigo-900 border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20">Vous n'avez pas les droits pour accéder à cette page.</p>
+            </div>
+            )}
         </div>
     );
 };

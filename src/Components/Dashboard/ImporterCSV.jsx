@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Papa from "papaparse";
 import axiosInstance from "../../config/axiosConfig";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ function ProfesseurFichier() {
 
   const [selectFile, setFile] = useState(null);
   const [nbErreur, setNb] = useState(0);
+  const [userRole, setUserRole] = useState('');
+
 
   const navigate = useNavigate()
 
@@ -14,6 +16,10 @@ function ProfesseurFichier() {
     const file = e.target.files[0];
     setFile(file);
   };
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+        setUserRole(role);
+  })
 
   const handleFileUpload = () => {
     if (selectFile) {
@@ -119,6 +125,8 @@ function ProfesseurFichier() {
     navigate(`/jeux`)
   };
   return (
+    <div>
+        {userRole === 'admin' ? (
     <div className="flex flex-col align-center justify-center text-center ">
         <div className="">
             <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
@@ -137,10 +145,16 @@ function ProfesseurFichier() {
                 <input id="dropzone-file" type="file" class="hidden" onChange= {handleFileChange}/>
             </label>
         </div> 
-        <button onClick={handleFileUpload} className="mt-8 text-white bg-lime-500 hover:bg-lime-400 mx-[750px] p-2 rounded-xl ">
+        <button onClick={handleFileUpload} className="font-bold mt-8 text-white bg-lime-600 hover:bg-lime-500 mx-[750px] p-2 rounded-full ">
             Ajouter les jeux
         </button>
     </div>
+    ):(
+      <div>
+     <p className="bg-white bg-opacity-85 text-indigo-900 border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20">Vous n'avez pas les droits pour accéder à cette page.</p>
+     </div>
+     )}
+ </div>
   );
 }
 

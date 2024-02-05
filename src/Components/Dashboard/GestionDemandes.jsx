@@ -10,11 +10,17 @@ const GestionDemandes = () => {
     const [voirDemandes,setVoirdemandes] = useState(false);
     const [selectedList, setSelectedList] = useState([])
     const [pseudoUser, setPseudoUser] = useState("")
+    const [userRole, setUserRole] = useState('');
+
 
     const navigate = useNavigate(); 
 
 
     useEffect(() => {
+
+        const role = localStorage.getItem('userRole');
+        setUserRole(role);
+
         const fetchData = async () => {
             try {
                 const usersResponse = await axiosInstance.get('users');
@@ -58,6 +64,9 @@ const GestionDemandes = () => {
 
     return (
         <div>
+            {userRole === 'admin' ? (
+        <div>
+
             { voirDemandes && (   
                 <div className="overlay ">
                     <VoirDemandes 
@@ -84,15 +93,21 @@ const GestionDemandes = () => {
                                 <button className="text-sm rounded-full bg-lime-600 px-3 py-2.5 text-white hover:bg-lime-500 mt-3 mr-2 my-3" onClick={() => handleClickDemandes(demands,users[userId].pseudo)}>
                                         Voir demandes
                                 </button>
-                                <button className="text-sm rounded-full bg-fuchsia-600 px-3 py-2.5 text-white hover:bg-fuchsia-500 mt-3 my-3" onClick={() =>handleClickProfil(userId)}>
-                                        Profil
-                                </button>
+                                
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+            </div>
+
+            ):(
+            <div>
+            <p className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20">Vous n'avez pas les droits pour accéder à cette page.</p>
+            </div>
+            )}
         </div>
+        
     );
 };
 
