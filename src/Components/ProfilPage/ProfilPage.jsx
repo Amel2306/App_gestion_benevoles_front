@@ -32,15 +32,28 @@ const ProfilPage = () => {
 
     const [creneauxInfo, setCreneauxInfo] = useState({});
     const [zoneInfo, setZoneInfo] = useState({})
+    const [userId, setUserId] = useState(null)
+
+    const [refresh, setRefresh] = useState(false)
 
     const {user_id} = useParams()
 
 
 
     useEffect(() => {
+
+
+        if (user_id) {
+            setUserId(user_id)
+        }
+        else {
+            setUserId(localStorage.getItem("userId"))
+        }
+        
         if (isLoading) {
             fetchUserInfo();
         }
+
         if (userHebergements) {
             const promises = userHebergements.map(hebergement => {
                 return getNombreDemandesAcceptees(hebergement.id);
@@ -114,6 +127,7 @@ const ProfilPage = () => {
         let userId = localStorage.getItem('userId');;
         if (user_id) {
             userId = user_id
+            setUserId(user_id)
         }
 
         if (userId) {
@@ -289,7 +303,7 @@ const ProfilPage = () => {
             <div>
         {isEditing && (
             <div className="overlay">
-                <ModifyProfilePage onClose={handleClose} updateUserInfo={fetchUserInfo}/>
+                <ModifyProfilePage onClose={handleClose} updateUserInfo={fetchUserInfo} user_id={userId}/>
             </div>
             )}
 
@@ -402,6 +416,13 @@ const ProfilPage = () => {
                             <span>Taille :</span>
                             <span>{userInfo.taille || <span style={{ color: 'gray' }}>Entrez votre taille</span>}</span>
                         </li>
+                        {user_id && (
+                            <li className="flex justify-between pl-10 pr-10 py-2 border-b border-gray-400">
+                                <span>Rôle(s) :</span>
+                                <span>{userInfo.role || <span style={{ color: 'gray' }}>Entrez un rôle</span>}</span>
+                            </li>
+                        )}
+
                         <li className="flex justify-between pl-10 pr-10 py-3 rounded-b-lg">
                         <span>Membre depuis le :</span>
                                 <span>{userInfo.createdAt ? formatDate(userInfo.createdAt) : <span style={{ color: 'gray' }}>Indisponible</span>}</span>

@@ -377,7 +377,7 @@ import React from "react";
             variant="small"
             className="font-medium text-indigo-900"
           >
-            <ListItem className="flex items-center gap-2 py-2 pr-4">Home</ListItem>
+            <ListItem className="flex items-center gap-2 py-2 pr-4">Accueil</ListItem>
           </Typography>
           <NavListMenu />
           <NavListMenu2/>
