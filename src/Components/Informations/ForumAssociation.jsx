@@ -10,8 +10,12 @@ const ForumAssociation = () => {
     const [showEditPopup, setShowEditPopup] = useState(false);
     const [newDescription, setNewDescription] = useState('');
     const [selectedPostId, setSelectedPostId] = useState(null);
+    const [userRole, setUserRole] = useState('');
+
 
     useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        setUserRole(role);
         axiosInstance.get('post/')
             .then(response => {
                 const filteredPosts = response.data.filter(post => post.nom_post === "Forum association");
@@ -55,11 +59,14 @@ const ForumAssociation = () => {
                 {animationJeuPosts.map(post => (
                     <div key={post.id} className='mt-5'>
                         <p>{post.description}</p>
+                        {userRole === 'admin' && (
+
                         <div className="flex items-center justify-center mt-5">
                         <button onClick={() => handleEditClick(post.id, post.description)} className="rounded-full bg-indigo-900 px-4 py-2 text-white hover:bg-indigo-500">
                         <PencilIcon className="h-5 w-5 mr-2 inline-block"/>
                         Modifier</button>
                         </div>
+                        )}
                     </div>
                 ))}
             </div>
