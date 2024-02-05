@@ -127,13 +127,13 @@ import React from "react";
                 Informations
                 <ChevronDownIcon
                   strokeWidth={2.5}
-                  className={`hidden h-3 w-3 transition-transform lg:block ${
+                  className={`hidden h-3 w-3 lg:block ${
                     isMenuOpen ? "rotate-180" : ""
                   }`}
                 />
                 <ChevronDownIcon
                   strokeWidth={2.5}
-                  className={`block h-3 w-3 transition-transform lg:hidden ${
+                  className={`block h-3 w-3 lg:hidden ${
                     isMobileMenuOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -202,13 +202,13 @@ import React from "react";
                     Calendrier
                     <ChevronDownIcon
                       strokeWidth={2.5}
-                      className={`hidden h-3 w-3 transition-transform lg:block ${
+                      className={`hidden h-3 w-3  lg:block ${
                         isMenuOpen ? "rotate-180" : ""
                       }`}
                     />
                     <ChevronDownIcon
                       strokeWidth={2.5}
-                      className={`block h-3 w-3 transition-transform lg:hidden ${
+                      className={`block h-3 w-3  lg:hidden ${
                         isMobileMenuOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -289,16 +289,16 @@ import React from "react";
                 selected={isMenuOpen || isMobileMenuOpen}
                 onClick={() => setIsMobileMenuOpen((cur) => !cur)}
               >
-                Calendrier
+                Tableau de bord
                 <ChevronDownIcon
                   strokeWidth={2.5}
-                  className={`hidden h-3 w-3 transition-transform lg:block ${
+                  className={`hidden h-3 w-3  lg:block ${
                     isMenuOpen ? "rotate-180" : ""
                   }`}
                 />
                 <ChevronDownIcon
                   strokeWidth={2.5}
-                  className={`block h-3 w-3 transition-transform lg:hidden ${
+                  className={`block h-3 w-3  lg:hidden ${
                     isMobileMenuOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -381,7 +381,7 @@ import React from "react";
           </Typography>
           <NavListMenu />
           <NavListMenu2/>
-
+          
           <Typography 
             as={Link}
             to="/jeux" 
@@ -390,7 +390,7 @@ import React from "react";
           >
             <ListItem className="flex items-center gap-2 py-2 pr-4">Jeux</ListItem>
           </Typography>
-
+          
           {chercheHebergement && (
 
           <Typography

@@ -38,8 +38,9 @@ const ProfilPage = () => {
 
 
     useEffect(() => {
-        fetchUserInfo();
-
+        if (isLoading) {
+            fetchUserInfo();
+        }
         if (userHebergements) {
             const promises = userHebergements.map(hebergement => {
                 return getNombreDemandesAcceptees(hebergement.id);
@@ -105,7 +106,7 @@ const ProfilPage = () => {
         }
         fetchData2();
 
-    }, []);
+    }, [isLoading, userHebergements]);
     
 
     const fetchUserInfo = () => {
