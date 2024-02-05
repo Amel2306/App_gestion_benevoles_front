@@ -133,11 +133,12 @@ const CalendrierPost = () => {
                     accepte,
                     archive
                 }
-                await axiosInstance.post(`demanderactivtie`, data)
+                //await axiosInstance.post(`demanderactivtie`, data)
             }   
             else {
                 aJeu = true
             }
+            console.log(selectedSlot)
         }
         if (aJeu) {
             console.log(selectedSlot)   
