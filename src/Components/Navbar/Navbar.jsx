@@ -71,10 +71,6 @@ import React from "react";
         title: "Calendrier Post",
         icon: BriefcaseIcon,
       },
-      {
-        title: "Calendrier Espace Animation",
-        icon: MapIcon,
-      },
     ];
 
       function NavListMenu() {

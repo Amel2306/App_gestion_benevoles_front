@@ -1,53 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
-const GestionUtilisateur = () => {
+const GestionDemandes = () => {
     const [users, setUsers] = useState([]);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
-        axiosInstance.get('/users/')
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des utilisateurs :', error);
-            });
+        const fetchData = async () => {
+            try {
+                const usersResponse = await axiosInstance.get('users');
+                const allUsers = usersResponse.data;
+                setUsers(allUsers)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données :', error);
+            }
+        };
+        fetchData();
     }, []);
 
-    const handleEditUser = (userId) => {
-
-        console.log('Modifier l\'utilisateur avec l\'ID :', userId);
-    };
-
-    const handleDeleteUser = (userId) => {
-
-        console.log('Supprimer l\'utilisateur avec l\'ID :', userId);
-    };
+    const handleClickProfil = (userId) => {
+        navigate(`/profil/${userId}`)
+    }
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-indigo-900">Gestion des Utilisateurs</h1>
-            <div>
-                {users.map(user => (
-                    <div key={user.id} className="flex items-center justify-between mt-5">
-                        <div>
-                            <p className="text-lg font-semibold">{user.name}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+            <div className={`flex flex-wrap align-center justify-center`} >
+                <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
+                    Liste des demandes d'activités
+                </h1>
+                <div className='flex flex-wrap align-center justify-center'>
+                    {users.map((user) => (
+                        <div className='m-4 flex flex-col align-center justify-center cursor-pointer overflow-hidden relative transition-all duration-500 hover:translate-y-2 w-72 h-50 bg-neutral-50 rounded-lg shadow-xl  items-center justify-evenly gap-2 p-2 before:absolute before:w-full hover:before:top-0 before:duration-500 before:-top-1 before:h-1 before:bg-indigo-500' key={user.id}>
+                            <figure className="mx-auto my-8 flex h-32 w-32 items-center justify-center rounded-full bg-indigo-800 ">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" className="bi bi-person-fill text-white " viewBox="0 0 16 16">
+                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                                </svg>
+                            </figure>
+                            <h1 className='text-xl mx-4'>{user.nom} {user.prenom}</h1>
+                            <div className='flex flex-wrap align-center justify-center'>
+                                <button className="text-sm rounded-full bg-fuchsia-600 px-3 py-2.5 text-white hover:bg-fuchsia-500 mt-3 my-3" onClick={() =>handleClickProfil(user.id)}>
+                                        Profil
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <button onClick={() => handleEditUser(user.id)} className="text-indigo-600 hover:text-indigo-900">
-                                <PencilIcon className="h-5 w-5" />
-                            </button>
-                            <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900">
-                                <TrashIcon className="h-5 w-5" />
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
 };
 
-export default GestionUtilisateur;
+export default GestionDemandes;
