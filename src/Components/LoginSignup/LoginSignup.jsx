@@ -31,8 +31,14 @@ const LoginSignup = () => {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('userId',userId);
                     localStorage.setItem('isAuthenticated',true);
-
-                    //vérification de la présence du token
+                    
+                    const userRole = response.data.existingUser.role;
+                    console.log(userRole)
+                    if(userRole !== null){
+                        localStorage.setItem('userRole', userRole);
+                    }else{
+                        localStorage.setItem('userRole', "bénévole");
+                    }
                     const token = localStorage.getItem('token');
                     if (token) {
                         console.log('Le token est présent :', token);
@@ -56,6 +62,9 @@ const LoginSignup = () => {
                     localStorage.setItem('userId',userId);
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('isAuthenticated',true);
+
+                    const userRole = response.data.existingUser.role;
+                    localStorage.setItem('userRole', userRole);
 
                      //vérification de la présence du token
                      const token = localStorage.getItem('token');

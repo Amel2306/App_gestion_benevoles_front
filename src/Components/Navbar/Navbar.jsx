@@ -352,6 +352,7 @@ import React from "react";
           localStorage.removeItem('userId');
           localStorage.removeItem('user');
           localStorage.setItem('isAuthenticated',false);
+          localStorage.removeItem('userRole');
           setIsAuthenticated(false);
           navigate("/");
       };
