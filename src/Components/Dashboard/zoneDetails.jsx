@@ -112,7 +112,7 @@ const ZoneDetails = ({ zone, handleClose }) => {
     return (
         <div className="container rounded-lg bg-opacity-85 p-8 shadow-lg m-4 mr-20 ml-20">
             <div className='grid grid-cols-2 gap-4'>
-                <h2 className="text-2xl font-bold text-indigo-900 mb-5">Modifier un hébergement</h2>
+                <h2 className="text-2xl font-bold text-indigo-900 mb-5">Modifier une zone</h2>
                 <div className='flex items-end justify-end col-span-1'>
                     <button type="button" className="text-white bg-fuchsia-700 focus:outline-none hover:bg-fuchsia-500 focus:ring-4 focus:ring-white font-medium rounded-full text-sm px-2 py-2 me-2 mb-2" onClick={handleClose}>
                         <XMarkIcon className="h-5 w-5 inline-block" />
