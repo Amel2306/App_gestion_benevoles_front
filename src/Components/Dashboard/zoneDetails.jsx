@@ -1,120 +1,213 @@
 import React, { useEffect, useState } from 'react';
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 
-const zoneDetails = ({ zoneId, selectedList, pseudoUser, handleClose}) => {
+
+const ZoneDetails = ({ zone, handleClose }) => {
     const navigate = useNavigate();
     const [creneauxInfo, setCreneauxInfo] = useState({});
+    const [zones, setZoneInfo] = useState([]);
+    const [posts, setPostInfo] = useState([]);
+    const [formData, setFormData] = useState({
+        nom_zb: zone.nom_zb,
+        zone_plan_id: '',
+        post_id: '',
+        selectedCreneaux: []
+    });
 
     useEffect(() => {
         async function fetchData() {
             try {
+                // Récupération des créneaux
                 const creneauxResponse = await axiosInstance.get('creneaux');
                 const creneaux = creneauxResponse.data;
-                console.log(creneaux);
+
+                // Récupération des informations de la zone
+                const zoneResponse = await axiosInstance.get(`zoneplan`);
+                const zone = zoneResponse.data;
+
+                // Récupération des informations des posts
+                const postsResponse = await axiosInstance.get('post');
+                const posts = postsResponse.data;
 
                 const newCreneauxInfo = {};
                 const joursSemaine = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
                 for (const creneau of creneaux) {
-                    console.log(creneau)
                     const jour = joursSemaine[new Date(creneau.date).getDay()];
-                    console.log(jour)
                     const heureDebut = creneau.horaire_debut.split(':')[0];
                     const heureFin = creneau.horaire_fin.split(':')[0];
-                    console.log(creneau);
-
                     const creneauInfoText = `${jour} : ${heureDebut}-${heureFin}`;
-                    console.log(jour);
                     newCreneauxInfo[creneau.id] = creneauInfoText;
-                };
+                }
+
                 setCreneauxInfo(newCreneauxInfo);
-                
+                setZoneInfo(zone);
+                setPostInfo(posts);
+
+                setFormData({
+                    nom_zb: zone.nom_zb,
+                    creneauId: zone.creneau_id.toString(),
+                    postId: zone.post_id.toString(),
+                    selectedCreneaux: [] // Initialiser le tableau de créneaux sélectionnés
+                });
             } catch (error) {
-                console.error('Erreur lors de la récupération des informations des créneaux :', error);
+                console.error('Erreur lors de la récupération des informations :', error);
             }
         }
 
-        if (Object.keys(creneauxInfo).length === 0) {
-            fetchData();
-        }
-    }, []);
+        fetchData();
+    }, [zone.creneau_id, zone.post_id]);
 
-    const handleSubmitValide = async (id) => {
-        try {
-            await axiosInstance.put(`demanderactivtie/accepte/${id}/1`);
-            console.log("La demande a été acceptée avec succès.");
-        } catch (error) {
-            console.error(`Erreur lors de la validation de la demande avec l'ID ${id}:`, error);
-        }
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
 
-    const handleSubmitDevalide = async (id) => {
+    const handleCheckboxChange = (creneauId, checked) => {
+        setFormData((prevData) => {
+            if (checked) {
+                // Ajouter le créneau à la liste des créneaux sélectionnés
+                return {
+                    ...prevData,
+                    selectedCreneaux: [...prevData.selectedCreneaux, { creneauId, nb_benevoles_max: '' }]
+                };
+            } else {
+                // Retirer le créneau de la liste des créneaux sélectionnés
+                return {
+                    ...prevData,
+                    selectedCreneaux: prevData.selectedCreneaux.filter((item) => item.creneauId !== creneauId)
+                };
+            }
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
         try {
-            await axiosInstance.delete(`demanderactivtie/${id}`)
-            console.log("bien supprimé !")
-            handleClose()
-        }
-        catch(error) {
-            console.log(error)
+            // Envoyer les modifications au backend pour la zone
+            await axiosInstance.put(`zonebenevole/${zone.id}`, {
+                nom_zb: formData.nom_zb,
+                post_id: parseInt(formData.post_id),
+                zone_plan_id: parseInt(formData.zone_plan_id)
+            });
+
+            for (const selectedCreneau of formData.selectedCreneaux) {
+                await axiosInstance.post('/creneauespace', {
+                    creneauId: selectedCreneau,
+                    zonebenevoleId: zone.id,
+                    nb_benevoles_max: parseInt(selectedCreneau[0])
+                });
+            }
+
+            console.log("Les modifications ont été enregistrées avec succès.");
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des informations de la zone :', error);
         }
     };
 
     return (
-        <div className={`container rounded-lg bg-opacity-85 p-8 shadow-lg m-4 mr-20 ml-20`}>
-            <div className='flex flex-col'>
-                <div className='flex flex-col'>
-                    <div className=' felex flex-row align-right justify-right pl-[500px]'>
-                        <button type="button" className="text-white bg-fuchsia-700 focus:outline-none hover:bg-fuchsia-500 focus:ring-4 focus:ring-white font-medium rounded-full text-sm px-2 py-2 me-2 mb-2 " onClick={handleClose}>
-                            <XMarkIcon className="h-5 w-5 inline-block" />
+        <div className="container rounded-lg bg-opacity-85 p-8 shadow-lg m-4 mr-20 ml-20">
+            <div className='flex'>
+                <h2 className="text-2xl font-bold text-indigo-900 mb-5">Modifier un hébergement</h2>
+                <div className='align-right justify-righ pl-[18px]'>
+                    <button type="button" className="text-white bg-fuchsia-700 focus:outline-none hover:bg-fuchsia-500 focus:ring-4 focus:ring-white font-medium rounded-full text-sm px-2 py-2 me-2 mb-2" onClick={handleClose}>
+                        <XMarkIcon className="h-5 w-5 inline-block" />
+                    </button>
+                </div>
+            </div>
+            <form className="w-full max-w-lg" onSubmit={handleSubmit}>
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                            Nom de la zone :
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                                type="text"
+                                name="nom_zb"
+                                value={formData.nom_zb}
+                                onChange={handleInputChange}
+                            />
+                        </label>
+                    </div>
+
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                            Post :
+                            <select
+                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                                name="post_id"
+                                value={formData.post_id}
+                                onChange={handleInputChange}
+                            >
+                                {posts.map((post) => (
+                                    <option key={post.id} value={post.id}>
+                                        {post.nom_post}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                            Zone plan :
+                            <select
+                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+
+                                name="zone_plan_id"
+                                value={formData.zone_plan_id}
+                                onChange={handleInputChange}
+                            >
+                                {zones.map((zone) => (
+                                    <option key={zone.id} value={zone.id}>
+                                        {zone.nom_zp}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        {/* Liste des créneaux avec cases à cocher et champs de saisie pour le nombre maximum de bénévoles */}
+                        {Object.entries(creneauxInfo).map(([creneauId, creneauInfoText]) => (
+                            <div key={creneauId}>
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                                    <input
+                                        type="checkbox"
+                                        value={creneauId}
+                                        checked={formData.selectedCreneaux.some((item) => item.creneauId === creneauId)}
+                                        onChange={(e) => handleCheckboxChange(creneauId, e.target.checked)}
+                                    />
+                                    {creneauInfoText}
+                                </label>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="ville">
+                                    Nombre max de bénévoles
+                                </label>
+                                <input
+                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+
+                                    type="number"
+                                    placeholder="Nombre max de bénévoles"
+                                    value={formData.selectedCreneaux[creneauId] }
+                                    onChange={(e) => handleInputChange({ target: { name: 'nb_benevoles_max', value: e.target.value, creneauId } })}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="w-full md:w-1/2 px-3 mb-6">
+                        <button className="rounded-full bg-lime-600 px-4 py-2 text-white hover:bg-indigo-700 transition-all" type="submit">
+                            Envoyer
+                            <PaperAirplaneIcon className="h-5 w-5 ml-2 inline-block" />
                         </button>
                     </div>
-                    <h2 className="text-2xl font-bold text-indigo-900 mb-5">Demande de {pseudoUser}</h2>
-                </div>
-                <div className='flex flex-wrap align-left justify-left p-3 m-3'>
-                    <ul>
-                        {selectedList.map((item, index) => (
-                            <li className={` ${item.accepte === 1 ? "bg-lime-100" : item.archive === 1 ? "bg-indigo-100" : "bg-fuchsia-100"} flex flex-row justify-between p-3 m-4 rounded-xl`} key={index}>
-                                <div className='ml-2 flex flex-col'>
-                                    <span>
-                                        Créneau : 
-                                    </span>
-                                    <span>
-                                        {creneauxInfo[item.creneau_id]}
-                                    </span>
-                                </div>
-                                <div className='mx-2 ml-14 flex flex-col'>
-                                    <span>
-                                        Zone :
-                                    </span>
-                                    <span>
-                                        {zoneInfo[item.zonebenevole_id]}
-                                    </span>
-                                </div>
-                                {
-                                    item.accepte === 0 && item.archive === 0 ? (
-                                        <button className="ml-10 rounded-full bg-lime-600 px-4 py-2 text-white hover:bg-indigo-700 transition-all" onClick={() => handleSubmitValide(item.id)}>
-                                            Valider
-                                        </button>
-                                    ) :
-                                        (
-                                            <button className="ml-3 rounded-full bg-indigo-600 px-4 py-2 text-white hover:bg-fuchsia-500 transition-all" onClick={() => handleSubmitDevalide(item.id)}>
-                                                Supprimer
-                                            </button>
-                                        )
-                                }
-
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-            <div className="flex items-center justify-between pl-[380px]">
-
-            </div>
+                </form>
         </div>
+ 
     );
 };
 
-export default zoneDetails;
+export default ZoneDetails;
