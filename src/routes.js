@@ -55,7 +55,7 @@ const Routess = () => {
                     <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
                     <Route path="/jeux" element={<ListeJeux />} />
                     <Route path="/jeuDetails/:jeuId" element={<DetailsJeu />} />
-                    <Route path='/zones' element={<ListeZones />} />
+                    <Route path='/gestion_zones' element={<ListeZones />} />
 
 
                 </Routes>
