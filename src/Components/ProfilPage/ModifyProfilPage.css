@@ -4,6 +4,8 @@
     left: 0;
     margin: 20px;
     z-index: 999; 
+    align-items: center;
+    
 }
 
 .content {
