@@ -65,6 +65,7 @@ const VoirDemandes = ({ selectedList, pseudoUser, handleClose, updateData}) => {
         try {
             await axiosInstance.put(`demanderactivtie/accepte/${id}/1`);
             console.log("La demande a été acceptée avec succès.");
+            alert("La demande a été validée avec succès.");
         } catch (error) {
             console.error(`Erreur lors de la validation de la demande avec l'ID ${id}:`, error);
         }
