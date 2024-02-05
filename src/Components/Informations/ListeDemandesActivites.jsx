@@ -13,31 +13,32 @@ const ListeDemandesActivites = () => {
 
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const usersResponse = await axiosInstance.get('users');
-                const allUsers = usersResponse.data;
-
-                const usersWithDemandsData = {};
-                const usersProv = {};
-                for (const user of allUsers) {
-                    const demandsResponse = await axiosInstance.get(`demanderactivtie/user/${user.id}`);
-                    const demands = demandsResponse.data;
-                    
-                    if (demands.length > 0) {
-                        usersWithDemandsData[user.id] = demands;
-                        usersProv[user.id] = user;
-                    }
-                }
-
-                setUsersWithDemands(usersWithDemandsData);
-                setUsers(usersProv)
-            } catch (error) {
-                console.error('Erreur lors de la récupération des données :', error);
-            }
-        };
         fetchData();
     }, []);
+
+    const fetchData =  () => {
+        try {
+            const usersResponse =  axiosInstance.get('users');
+            const allUsers = usersResponse.data;
+
+            const usersWithDemandsData = {};
+            const usersProv = {};
+            for (const user of allUsers) {
+                const demandsResponse =  axiosInstance.get(`demanderactivtie/user/${user.id}`);
+                const demands = demandsResponse.data;
+                
+                if (demands.length > 0) {
+                    usersWithDemandsData[user.id] = demands;
+                    usersProv[user.id] = user;
+                }
+            }
+
+            setUsersWithDemands(usersWithDemandsData);
+            setUsers(usersProv)
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données :', error);
+        }
+    };
 
     const handleClickDemandes = (liste, pseudoUser) => {
         setSelectedList (liste)
@@ -48,6 +49,7 @@ const ListeDemandesActivites = () => {
     const handleClose = () => {
         setSelectedList ([])
         setVoirdemandes(false)
+        fetchData()
     }
 
     return (
@@ -55,9 +57,10 @@ const ListeDemandesActivites = () => {
             { voirDemandes && (   
                 <div className="overlay ">
                     <VoirDemandes 
-                    selectedList={selectedList}
-                    pseudoUser={pseudoUser}
-                    handleClose={handleClose}
+                        selectedList={selectedList}
+                        pseudoUser={pseudoUser}
+                        handleClose={handleClose}
+                        updateData={fetchData} 
                     />
                 </div>
             )}

@@ -21,6 +21,7 @@ import ListeJeux from './Components/Jeux/ListeJeux';
 import DetailsJeu from './Components/Jeux/DetailsJeu';
 
 import { NavbarWithMegaMenu } from './Components/Navbar/Navbar.jsx';
+import ListeZones from './Components/Dashboard/ListeZones';
 
 
 const Routess = () => {
@@ -53,6 +54,7 @@ const Routess = () => {
                     <Route path="/gestion_utilisateur" element={<GestionUtilisateur />} />
                     <Route path="/jeux" element={<ListeJeux />} />
                     <Route path="/jeuDetails/:jeuId" element={<DetailsJeu />} />
+                    <Route path='/zones' element={<ListeZones />} />
 
 
                 </Routes>

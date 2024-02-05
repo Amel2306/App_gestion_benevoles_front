@@ -3,10 +3,9 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 
-const VoirDemandes = ({ selectedList, pseudoUser, handleClose, updateData}) => {
+const zoneDetails = ({ zoneId, selectedList, pseudoUser, handleClose}) => {
     const navigate = useNavigate();
     const [creneauxInfo, setCreneauxInfo] = useState({});
-    const [zoneInfo, setZoneInfo] = useState({})
 
     useEffect(() => {
         async function fetchData() {
@@ -30,35 +29,16 @@ const VoirDemandes = ({ selectedList, pseudoUser, handleClose, updateData}) => {
                     console.log(jour);
                     newCreneauxInfo[creneau.id] = creneauInfoText;
                 };
-
                 setCreneauxInfo(newCreneauxInfo);
+                
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations des créneaux :', error);
-            }
-        }
-        async function fetchData2() {
-            try {
-                const creneauxResponse = await axiosInstance.get('zonebenevole');
-                const creneaux = creneauxResponse.data;
-                console.log(creneaux);
-
-                const newCreneauxInfo = {};
-
-                for (const creneau of creneaux) {
-
-                    newCreneauxInfo[creneau.id] = creneau.nom_zb;
-                };
-
-                setZoneInfo(newCreneauxInfo);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des informations des zones :', error);
             }
         }
 
         if (Object.keys(creneauxInfo).length === 0) {
             fetchData();
         }
-        fetchData2();
     }, []);
 
     const handleSubmitValide = async (id) => {
@@ -137,4 +117,4 @@ const VoirDemandes = ({ selectedList, pseudoUser, handleClose, updateData}) => {
     );
 };
 
-export default VoirDemandes;
+export default zoneDetails;

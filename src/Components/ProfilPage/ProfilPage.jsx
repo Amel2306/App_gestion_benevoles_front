@@ -285,6 +285,17 @@ const ProfilPage = () => {
         fetchUserInfo();
     };
 
+    const handleDeleteDemande = async (id) => {
+        try {
+            await axiosInstance.delete(`demanderactivtie/${id}`)
+            console.log("bien supprimé !")
+            window.location.reload()
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
+
     const getNombreDemandesAcceptees = (hebergementId) => {
         return axiosInstance.get(`/demanderlogement/hebergement/${hebergementId}`)
             .then(response => {
@@ -523,7 +534,7 @@ const ProfilPage = () => {
                             {zoneInfo[demande.zonebenevole_id]}
                         </p>
                         <div className='my-4'>
-                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(demande.id)}>
+                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteDemande(demande.id)}>
                                 <TrashIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
                                 Supprimer
                             </a>
@@ -568,7 +579,7 @@ const ProfilPage = () => {
                             {zoneInfo[demande.zonebenevole_id]}
                         </p>
                         <div className='my-4'>
-                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteAccomodation(demande.id)}>
+                        <a className="text-sm  ml-2 mr-2 rounded-full bg-fuchsia-700 px-4 py-2  text-white hover:bg-fuchsia-500" onClick={()=>handleDeleteDemande(demande.id)}>
                                 <TrashIcon className="h-5 w-5 mr-1 mb-0.5 inline-block" />
                                 Supprimer
                             </a>
