@@ -76,8 +76,8 @@ const GestionDemandes = () => {
                     />
                 </div>
             )}
-            <div className={` ${voirDemandes && 'blur'} flex flex-wrap align-center justify-center`} >
-                <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20 text-white">
+            <div className={` ${voirDemandes && 'blur'} align-center justify-center`} >
+                <h1 className="bg-white bg-opacity-85 text-[#4A4BA8] border-2 mx-[500px] p-4 rounded-2xl font-medium text-3xl mb-12 mt-20">
                     Liste des demandes d'activités
                 </h1>
                 <div className='flex flex-wrap align-center justify-center'>

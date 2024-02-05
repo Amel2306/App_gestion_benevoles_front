@@ -55,7 +55,7 @@ const ListeDemandesActivites = () => {
     return (
         <div>
             { voirDemandes && (   
-                <div className="overlay ">
+                <div className="overlay">
                     <VoirDemandes 
                         selectedList={selectedList}
                         pseudoUser={pseudoUser}
