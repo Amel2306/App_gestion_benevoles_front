@@ -445,10 +445,10 @@ const ProfilPage = () => {
             </div>
         
     <div className="pl-[100px] pr-[100px] flex justify-center">
-    <div className=" rounded-lg bg-opacity-85 bg-white p-6 shadow-lg">
+    <div className=" rounded-lg bg-opacity-85 bg-white p-4 shadow-lg">
         <div className='flex'>
         <h2 className="text-2xl font-bold text-indigo-900">Proposer un hébergement</h2>
-        <div className='pl-[1030px]'>
+        <div className='pl-[915px]'>
         <button className="rounded-full bg-lime-600 px-5 py-2.5 text-white hover:bg-indigo-700 " onClick={handleOpenAddAccommodation}>
             <PlusIcon className="h-6 w-6 mr-2 inline-block" />
             Ajouter
