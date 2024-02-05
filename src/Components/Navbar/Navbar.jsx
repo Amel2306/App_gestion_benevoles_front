@@ -364,6 +364,7 @@ import React from "react";
           localStorage.removeItem('user');
           localStorage.setItem('isAuthenticated',false);
           localStorage.removeItem('userRole');
+          localStorage.removeItem('cherche_hebergement')
           setIsAuthenticated(false);
           navigate("/");
           window.location.reload();
